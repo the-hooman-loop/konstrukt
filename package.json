@@ -1,6 +1,6 @@
 {
   "name": "@hooman-loop/konstrukt",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Konstrukt — The Hooman Loop design system. JSON-first design tokens with CSS, Swift/SwiftUI, and JSON exports.",
   "author": "The Hooman Loop",
   "homepage": "https://thehoomanloop.com/konstrukt",
