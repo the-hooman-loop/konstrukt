@@ -1,15 +1,30 @@
 # Konstrukt
 
+[![verify](https://github.com/the-hooman-loop/konstrukt/actions/workflows/verify.yml/badge.svg)](https://github.com/the-hooman-loop/konstrukt/actions/workflows/verify.yml)
+[![license](https://img.shields.io/badge/license-MIT-067F8A?style=flat-square)](LICENSE)
+
 The Hooman Loop design system. JSON-first design tokens, generated into CSS,
 Swift/SwiftUI, and a JSON manifest, with a self-contained documentation site.
 
 Konstrukt is the single source of truth: edit tokens in `tokens/`, run the
-build, and every surface — web apps, the marketing site, internal tools, and
+build, and every surface — web apps, marketing sites, internal tools, and
 native iOS — follows.
 
-Public, version **1.1.0**. One open proposal: a
-[text layer](proposals/text-layer/scope.md) for charts, annotations and CLI
-motion, which is not part of the versioned contract yet.
+![Konstrukt landing page](assets/readme/hero.png)
+
+Ten themes · 78 resolved tokens per theme · 3 output targets · 0px radius ·
+0 shadows. Bauhaus / Swiss International: flat surfaces, square corners,
+authority through typography rather than chrome.
+
+## Ten themes, one token set
+
+![Palette cycling through all ten themes](assets/readme/palettes.gif)
+
+Every theme is the intersection of two orthogonal axes, set as attributes on
+`<html>`: a **palette** (`atelier` · `courage` · `minimal` · `hl` · `blueprint`)
+and a **mode** (`light` · `dark`). Five palettes × two modes, resolved at build
+time into ten flat token sets. No runtime interpolation, no theme math in the
+browser.
 
 ## Quick start
 
@@ -30,6 +45,34 @@ npm run docs       # serve the docs site on http://localhost:4340
 | Swift package | `dist/swift/Konstrukt/` | iOS / SwiftUI |
 | Manifest | `dist/tokens.json` | tooling, design apps, AI agents |
 | Docs site | `docs/` | reference + integration guides |
+
+## Tokens
+
+Every token is authored once, in W3C DTCG JSON, and its path becomes its CSS
+custom property: `status.draft-bg` → `--status-draft-bg`. The reference page
+reads the generated manifest, so what you see is what ships.
+
+<img src="assets/readme/tokens.png" width="820" alt="Token reference: surfaces and text, accent and borders, status">
+
+## Components
+
+The portable component vocabulary: modules with 2px ink borders, status pills,
+segmented filters, data tables, question lists. Square by default, no shadows,
+teal reserved for the one primary action on a surface.
+
+<img src="assets/readme/components.png" width="820" alt="Component reference">
+
+## Text layer — proposal
+
+Charts, annotations and CLI motion for channels that render characters instead
+of pixels. Nine primitives, two encodings, and a linter that fails a build when
+a chart lies about a number.
+
+<img src="assets/readme/text-layer.png" width="900" alt="Konstrukt text layer one-pager">
+
+This is a proposal, not part of the versioned contract. Read
+[`proposals/text-layer/scope.md`](proposals/text-layer/scope.md) for the rules,
+or run the reference renderer: `python3 scripts/text_layer_prototype.py`.
 
 ## Documentation
 
@@ -63,3 +106,7 @@ request, and a vendored copy carries a version stamp.
 
 MIT for the code and tokens. The Konstrukt name and marks are not covered by
 the license. See [`LICENSE`](LICENSE).
+
+---
+
+Konstrukt is a project of The Hooman Loop.
