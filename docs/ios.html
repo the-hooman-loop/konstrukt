@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F5F0">
+  <title>iOS — Konstrukt</title>
+  <link rel="stylesheet" href="assets/konstrukt.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="css/docs.css">
+  <script src="assets/theme.js"></script>
+  <script src="js/docs.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="micro-label">Integration</p>
+      <h1>iOS &amp; SwiftUI</h1>
+      <p class="tagline">Konstrukt ships a generated Swift package so native apps use the exact same token values as the web. Colors, spacing, radius, and font names are all typed.</p>
+    </header>
+
+    <h2 class="section-label"><span class="micro-label">1 · Add the package</span></h2>
+    <section class="module">
+      <p>The package is generated at <code class="inline">apps/konstrukt/dist/swift/Konstrukt</code>. Reference it by local path from a sibling app, or pin a tagged release once published.</p>
+      <pre class="code">// Package.swift
+dependencies: [
+    .package(path: "../hooman-loop/apps/konstrukt/dist/swift/Konstrukt"),
+],
+targets: [
+    .target(name: "App", dependencies: ["Konstrukt"]),
+]</pre>
+      <p class="meta">In Xcode: File &rarr; Add Package Dependencies &rarr; Add Local… and select the <code class="inline">Konstrukt</code> folder.</p>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">2 · Resolve a theme</span></h2>
+    <section class="module">
+      <p>A <code class="inline">KonstruktTheme</code> is the intersection of a palette and a mode — the same two axes as the web.</p>
+      <pre class="code">import Konstrukt
+
+let theme = KonstruktTheme.theme(palette: .hl, mode: .dark)
+// theme.accent, theme.bg, theme.surface, theme.text, ...</pre>
+      <table class="data-table">
+        <thead><tr><th>Type</th><th>Cases</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">KonstruktPalette</code></td><td>.atelier · .courage · .minimal · .hl · .blueprint</td></tr>
+          <tr><td><code class="inline">KonstruktMode</code></td><td>.light · .dark</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">3 · Use the environment</span></h2>
+    <section class="module">
+      <p>Inject a theme once near the root, then read it anywhere with <code class="inline">@Environment</code>.</p>
+      <pre class="code">import SwiftUI
+import Konstrukt
+
+struct RootView: View {
+    @Environment(\.colorScheme) private var scheme
+    var body: some View {
+        ContentView()
+            .konstruktTheme(palette: .hl, mode: scheme == .dark ? .dark : .light)
+    }
+}
+
+struct ContentView: View {
+    @Environment(\.konstruktTheme) private var theme
+    var body: some View {
+        VStack(spacing: KonstruktSpacing.sp4) {
+            Text("The Hooman Loop")
+                .font(.custom(KonstruktFont.display, size: 28))
+                .foregroundStyle(theme.text)
+            Text("Build once. Theme everywhere.")
+                .foregroundStyle(theme.textMuted)
+        }
+        .padding(KonstruktSpacing.sp6)
+        .background(theme.surface)
+    }
+}</pre>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">4 · Spacing, radius, fonts</span></h2>
+    <section class="module">
+      <pre class="code">KonstruktSpacing.sp1   // 4
+KonstruktSpacing.sp4   // 16
+KonstruktSpacing.sp16  // 64
+KonstruktRadius.base   // 0  (square corners)
+
+KonstruktFont.display  // "Space Grotesk"
+KonstruktFont.sans     // "Inter"
+KonstruktFont.mono     // "SF Mono"</pre>
+      <p>Register Space Grotesk and Inter in your app bundle (Info.plist <code class="inline">UIAppFonts</code>) to render the display and body families; SF Mono ships with the system.</p>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Regenerating</span></h2>
+    <section class="module">
+      <p>The Swift sources are generated — never hand-edit them. Change a value in <code class="inline">apps/konstrukt/tokens/</code> and rebuild; the CSS, Swift, and JSON outputs update together.</p>
+      <pre class="code">cd apps/konstrukt && npm run build</pre>
+    </section>
+
+    <footer class="site-footer">
+      <p>Konstrukt · iOS integration</p>
+    </footer>
+  </main>
+</body>
+</html>

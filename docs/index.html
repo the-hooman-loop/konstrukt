@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F5F0">
+  <title>Konstrukt — The Hooman Loop Design System</title>
+  <link rel="stylesheet" href="assets/konstrukt.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="css/docs.css">
+  <script src="assets/theme.js"></script>
+  <script src="js/docs.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="micro-label">The Hooman Loop Design System</p>
+      <h1>Konstrukt</h1>
+      <p class="tagline">The single source of truth for design tokens across all The Hooman Loop surfaces — web apps, marketing sites, and native iOS. Authored once as JSON, generated into CSS, Swift, and a machine-readable manifest.</p>
+      <div class="meta-row">
+        <span><strong>Style</strong> Bauhaus / Swiss International</span>
+        <span><strong>Palettes</strong> 5</span>
+        <span><strong>Modes</strong> Light + Dark</span>
+      </div>
+    </header>
+
+    <section class="module accent-left">
+      <div class="module-header"><p class="micro-label">Principles</p></div>
+      <table class="data-table">
+        <tbody>
+          <tr><td><strong>Flat</strong></td><td>No drop shadows. Elevation is communicated with borders and weight, never blur. <code class="inline">--shadow: none</code>.</td></tr>
+          <tr><td><strong>Square</strong></td><td>Corners are sharp by default. <code class="inline">--radius: 0px</code>.</td></tr>
+          <tr><td><strong>Typographic</strong></td><td>Space Grotesk for display, Inter for body, SF Mono for code. Hierarchy carries the layout.</td></tr>
+          <tr><td><strong>Restrained color</strong></td><td>An off-white canvas, near-black ink, one teal accent. Status and segment colors are reserved for meaning.</td></tr>
+          <tr><td><strong>Grid</strong></td><td>A strict 4px spacing scale, <code class="inline">--sp-1</code> through <code class="inline">--sp-16</code>.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Two axes</span></h2>
+    <section class="module">
+      <p class="lede">Every theme is the intersection of a <strong>palette</strong> and a <strong>mode</strong>, set as attributes on <code class="inline">&lt;html&gt;</code>. Use the controls in the header to preview any combination across these docs.</p>
+      <pre class="code">&lt;html data-palette="hl" data-mode="dark"&gt;</pre>
+      <table class="data-table">
+        <thead><tr><th>Attribute</th><th>Values</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">data-palette</code></td><td>atelier · courage · minimal · hl · blueprint <span class="meta">(legacy <code class="inline">sqdl</code> &rarr; <code class="inline">hl</code>)</span></td></tr>
+          <tr><td><code class="inline">data-mode</code></td><td>light · dark <span class="meta">(legacy <code class="inline">[data-theme="dark"]</code>)</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Consume it</span></h2>
+    <div class="card-grid">
+      <article class="index-card">
+        <div class="index-card-primary">
+          <span class="card-label">Web — vanilla</span>
+          <h3>HTML / CSS</h3>
+          <p class="card-detail">Link the generated stylesheet and theme runtime. No build step.</p>
+          <pre class="code">&lt;link rel="stylesheet" href="konstrukt.css"&gt;
+&lt;link rel="stylesheet" href="base.css"&gt;
+&lt;script src="theme.js"&gt;&lt;/script&gt;</pre>
+        </div>
+      </article>
+      <article class="index-card">
+        <div class="index-card-primary">
+          <span class="card-label">Web — bundled</span>
+          <h3>Astro / Vite / React</h3>
+          <p class="card-detail">Import the token stylesheet from your entry CSS or layout.</p>
+          <pre class="code">@import '@hooman-loop/konstrukt/css';</pre>
+        </div>
+      </article>
+      <article class="index-card">
+        <div class="index-card-primary">
+          <span class="card-label">Native</span>
+          <h3>iOS / SwiftUI</h3>
+          <p class="card-detail">Add the generated Swift package and read a typed theme from the environment.</p>
+          <pre class="code">@Environment(\.konstruktTheme) var theme
+Text("Hi").foregroundStyle(theme.accent)</pre>
+          <p class="card-detail"><a href="ios.html">iOS integration guide &rarr;</a></p>
+        </div>
+      </article>
+      <article class="index-card">
+        <div class="index-card-primary">
+          <span class="card-label">Tooling / AI</span>
+          <h3>tokens.json</h3>
+          <p class="card-detail">A resolved manifest of every theme for design tooling and agents.</p>
+          <pre class="code">assets/tokens.json</pre>
+        </div>
+      </article>
+    </div>
+
+    <h2 class="section-label"><span class="micro-label">How it is built</span></h2>
+    <section class="module">
+      <p>Tokens live as W3C DTCG JSON in <code class="inline">apps/konstrukt/tokens/</code>. A Style Dictionary build emits one CSS selector block per palette and mode, a Swift package, and the JSON manifest. A parity check confirms the generated CSS matches the portal's canonical tokens value-for-value.</p>
+      <pre class="code">cd apps/konstrukt
+npm run build     # tokens -> dist/{css,swift,tokens.json}
+npm run check     # parity gate vs canonical CSS</pre>
+    </section>
+
+    <footer class="site-footer">
+      <p>Konstrukt · The Hooman Loop Design System</p>
+      <p class="quote">Edit tokens in one place. Every surface follows.</p>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F5F0">
+  <title>Tokens — Konstrukt</title>
+  <link rel="stylesheet" href="assets/konstrukt.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="css/docs.css">
+  <script src="assets/theme.js"></script>
+  <script src="js/docs.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="micro-label">Reference</p>
+      <h1>Tokens</h1>
+      <p class="tagline">Live values for the selected palette and mode. Change the palette or toggle the mode in the header to see every swatch update.</p>
+    </header>
+
+    <h2 class="section-label"><span class="micro-label">Surfaces &amp; text</span></h2>
+    <section class="module"><div class="swatch-grid" id="sw-surface"></div></section>
+
+    <h2 class="section-label"><span class="micro-label">Accent &amp; borders</span></h2>
+    <section class="module"><div class="swatch-grid" id="sw-accent"></div></section>
+
+    <h2 class="section-label"><span class="micro-label">Status</span></h2>
+    <section class="module"><div class="swatch-grid" id="sw-status"></div></section>
+
+    <h2 class="section-label"><span class="micro-label">Segment tags</span></h2>
+    <section class="module"><div class="swatch-grid" id="sw-tag"></div></section>
+
+    <h2 class="section-label"><span class="micro-label">Financial</span></h2>
+    <section class="module"><div class="swatch-grid" id="sw-finance"></div></section>
+
+    <h2 class="section-label"><span class="micro-label">Spacing scale · 4px grid</span></h2>
+    <section class="module"><div id="scale"></div></section>
+
+    <footer class="site-footer">
+      <p>Konstrukt · Tokens render live from <code class="inline">assets/tokens.json</code></p>
+    </footer>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var D = window.KonstruktDocs;
+      var isSurface = function (n) { return ['bg','bg-alt','surface','card','text','text-muted','muted','ink'].indexOf(n) !== -1; };
+      var isAccent = function (n) { return n.indexOf('accent') === 0 || n.indexOf('border') === 0; };
+      var isStatus = function (n) { return n.indexOf('status-') === 0 || n.indexOf('badge-') === 0 || n === 'done' || n === 'done-bg' || n.indexOf('beachhead') === 0 || n.indexOf('selection') === 0; };
+      var isTag = function (n) { return n.indexOf('tag-') === 0; };
+      var isFinance = function (n) { return n.indexOf('revenue-') === 0 || n.indexOf('invoice-') === 0 || n.indexOf('timeline-') === 0; };
+      D.renderSwatches('sw-surface', isSurface);
+      D.renderSwatches('sw-accent', isAccent);
+      D.renderSwatches('sw-status', isStatus);
+      D.renderSwatches('sw-tag', isTag);
+      D.renderSwatches('sw-finance', isFinance);
+      D.renderScale('scale');
+    });
+  </script>
+</body>
+</html>

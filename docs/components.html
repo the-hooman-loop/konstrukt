@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F5F0">
+  <title>Components — Konstrukt</title>
+  <link rel="stylesheet" href="assets/konstrukt.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="css/docs.css">
+  <script src="assets/theme.js"></script>
+  <script src="js/docs.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="micro-label">Reference</p>
+      <h1>Components</h1>
+      <p class="tagline">Portable building blocks from <code class="inline">base.css</code>. They use only tokens, so they re-theme automatically with the palette and mode controls above.</p>
+    </header>
+
+    <h2 class="section-label"><span class="micro-label">Module</span></h2>
+    <section class="module accent-left">
+      <div class="module-header"><p class="micro-label">Module header</p></div>
+      <p>A <code class="inline">.module</code> is the primary content block — a flat surface with a 2px ink top border. Add <code class="inline">.accent-left</code> for a teal rail.</p>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Badges</span></h2>
+    <section class="module">
+      <div class="demo">
+        <span class="badge badge-draft">Draft</span>
+        <span class="badge badge-review">Review</span>
+        <span class="badge badge-complete">Complete</span>
+        <span class="badge badge-in-progress">In progress</span>
+        <span class="badge badge-launched">Launched</span>
+      </div>
+      <pre class="code">&lt;span class="badge badge-review"&gt;Review&lt;/span&gt;</pre>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Segment tags</span></h2>
+    <section class="module">
+      <div class="demo">
+        <span class="tag tag-builders">Builders</span>
+        <span class="tag tag-operators">Operators</span>
+        <span class="tag tag-learners">Learners</span>
+        <span class="beachhead">Beachhead</span>
+      </div>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Buttons</span></h2>
+    <section class="module">
+      <div class="demo">
+        <button class="portal-quiet-btn">Quiet button</button>
+        <button class="portal-quiet-btn is-selected">Selected</button>
+      </div>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Data table</span></h2>
+    <section class="module">
+      <table class="data-table">
+        <thead><tr><th>Surface</th><th>Stack</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Portal</td><td>Static HTML/JS</td><td><span class="badge badge-complete">Live</span></td></tr>
+          <tr><td>Marketing site</td><td>Astro</td><td><span class="badge badge-review">Review</span></td></tr>
+          <tr><td>iOS app</td><td>SwiftUI</td><td><span class="badge badge-in-progress">In progress</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Cards</span></h2>
+    <section class="module">
+      <div class="card-grid">
+        <a class="index-card" href="#">
+          <span class="card-label">Card label</span>
+          <h3>Index card</h3>
+          <p class="card-detail">A linked card with a hover rail. Used for navigation grids.</p>
+        </a>
+        <a class="index-card" href="#">
+          <span class="card-label">Card label</span>
+          <h3>Second card</h3>
+          <p class="card-detail">Cards collapse to a single column under 640px.</p>
+        </a>
+      </div>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Progress</span></h2>
+    <section class="module">
+      <div class="progress-track"><div class="progress-fill" style="width:62%"></div></div>
+      <p class="meta">62% complete</p>
+    </section>
+
+    <footer class="site-footer">
+      <p>Konstrukt · Components</p>
+    </footer>
+  </main>
+</body>
+</html>

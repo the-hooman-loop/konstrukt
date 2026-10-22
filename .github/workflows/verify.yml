@@ -1,0 +1,43 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tokens:
+    name: build + parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      # Fails the build when generated CSS drifts from the canonical snapshot.
+      - run: npm run check
+
+  text-proposal:
+    name: text layer lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The linter is part of the proposal, not the contract yet. It runs here so
+      # the rules cannot rot before they are promoted.
+      - name: self-test
+        run: python3 scripts/text_lint.py --self-test
+      - name: lint the reference board, both encodings
+        run: |
+          python3 scripts/text_layer_prototype.py > /tmp/board.txt
+          head -70 /tmp/board.txt > /tmp/board-unicode.txt
+          tail -n +71 /tmp/board.txt > /tmp/board-ascii.txt
+          python3 scripts/text_lint.py --file /tmp/board-unicode.txt --budget 44
+          python3 scripts/text_lint.py --file /tmp/board-ascii.txt --budget 44
+      - name: generators run clean
+        run: |
+          python3 scripts/text_onepager.py /tmp/onepager.html
+          python3 scripts/text_board_page.py /tmp/sheet.html
+          test -s /tmp/onepager.html && test -s /tmp/sheet.html

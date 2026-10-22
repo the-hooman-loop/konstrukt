@@ -1,0 +1,28 @@
+{
+  "font": {
+    "sans":    { "$type": "fontFamily", "$value": "\"Inter\", \"Segoe UI\", system-ui, -apple-system, sans-serif" },
+    "display": { "$type": "fontFamily", "$value": "\"Space Grotesk\", system-ui, sans-serif" },
+    "mono":    { "$type": "fontFamily", "$value": "\"SF Mono\", \"Fira Code\", \"Consolas\", monospace" }
+  },
+  "sp": {
+    "1":  { "$type": "dimension", "$value": "4px" },
+    "2":  { "$type": "dimension", "$value": "8px" },
+    "3":  { "$type": "dimension", "$value": "12px" },
+    "4":  { "$type": "dimension", "$value": "16px" },
+    "5":  { "$type": "dimension", "$value": "20px" },
+    "6":  { "$type": "dimension", "$value": "24px" },
+    "8":  { "$type": "dimension", "$value": "32px" },
+    "12": { "$type": "dimension", "$value": "48px" },
+    "16": { "$type": "dimension", "$value": "64px" }
+  },
+  "radius":     { "$type": "dimension", "$value": "0px" },
+  "transition": { "$type": "other",     "$value": "150ms ease" },
+  "swatch": {
+    "atelier":   { "$type": "color", "$value": "#0A0A0A" },
+    "courage":   { "$type": "color", "$value": "#C45C3E" },
+    "minimal":   { "$type": "color", "$value": "#1A1C1E" },
+    "hl":        { "$type": "color", "$value": "#067F8A" },
+    "sqdl":      { "$type": "color", "$value": "#067F8A" },
+    "blueprint": { "$type": "color", "$value": "#111827" }
+  }
+}

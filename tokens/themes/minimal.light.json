@@ -1,0 +1,48 @@
+{
+  "bg":           { "$type": "color", "$value": "#FFFFFF" },
+  "bg-alt":       { "$type": "color", "$value": "#FAFAFA" },
+  "surface":      { "$type": "color", "$value": "#FFFFFF" },
+  "card":         { "$type": "color", "$value": "#FFFFFF" },
+  "text":         { "$type": "color", "$value": "#111111" },
+  "text-muted":   { "$type": "color", "$value": "#666666" },
+  "muted":        { "$type": "color", "$value": "#666666" },
+  "ink":          { "$type": "color", "$value": "#111111" },
+  "border":       { "$type": "color", "$value": "#D4D4D4" },
+  "border-light": { "$type": "color", "$value": "#E5E5E5" },
+  "accent":       { "$type": "color", "$value": "#111111" },
+  "accent-soft":  { "$type": "color", "$value": "#F5F5F5" },
+  "accent-light": { "$type": "color", "$value": "#FAFAFA" },
+  "done":    { "$type": "color", "$value": "#111111" },
+  "done-bg": { "$type": "color", "$value": "#F5F5F5" },
+  "badge": {
+    "draft":    { "$type": "color", "$value": "#888888" },
+    "review":   { "$type": "color", "$value": "#555555" },
+    "complete": { "$type": "color", "$value": "#111111" }
+  },
+  "status": {
+    "draft-bg":       { "$type": "color", "$value": "#F5F5F5" },
+    "draft":          { "$type": "color", "$value": "#888888" },
+    "review-bg":      { "$type": "color", "$value": "#F0F0F0" },
+    "review":         { "$type": "color", "$value": "#555555" },
+    "complete-bg":    { "$type": "color", "$value": "#F5F5F5" },
+    "complete":       { "$type": "color", "$value": "#111111" },
+    "in-progress-bg": { "$type": "color", "$value": "#FEFCE8" },
+    "in-progress":    { "$type": "color", "$value": "#CA8A04" },
+    "launched-bg":    { "$type": "color", "$value": "#F0F0F0" },
+    "launched":       { "$type": "color", "$value": "#1E40AF" }
+  },
+  "tag": {
+    "builders-bg":    { "$type": "color", "$value": "#F0F0F0" },
+    "builders":       { "$type": "color", "$value": "#333333" },
+    "builders-text":  { "$type": "color", "$value": "#333333" },
+    "operators-bg":   { "$type": "color", "$value": "#F0F0F0" },
+    "operators":      { "$type": "color", "$value": "#555555" },
+    "operators-text": { "$type": "color", "$value": "#555555" },
+    "learners-bg":    { "$type": "color", "$value": "#F0F0F0" },
+    "learners":       { "$type": "color", "$value": "#444444" },
+    "learners-text":  { "$type": "color", "$value": "#444444" }
+  },
+  "beachhead-bg": { "$type": "color", "$value": "#F5F5F5" },
+  "beachhead":    { "$type": "color", "$value": "#666666" },
+  "shadow": { "$type": "other", "$value": "none" }
+}

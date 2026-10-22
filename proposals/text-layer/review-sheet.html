@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Konstrukt · Text — review sheet</title>
+<style>
+:root{
+  --font-sans:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-display:"Space Grotesk",system-ui,sans-serif;
+  --font-mono:"SF Mono","Fira Code",Consolas,monospace;
+  --bg:#F5F5F0; --bg-alt:#EBEBEB; --surface:#FFFFFF;
+  --text:#0A0A0A; --ink:#0A0A0A; --text-muted:#6A6A6A;
+  --border:#0A0A0A; --border-light:#D0D0C8;
+  --accent:#067F8A; --accent-soft:#C8EAED; --accent-light:#E8F6F7;
+  --danger:#9D1B1E; --radius:0px; --shadow:none;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:var(--font-sans); font-size:16px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:linear-gradient(#0000000a 1px,transparent 1px),
+                   linear-gradient(90deg,#0000000a 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.shell{position:relative; z-index:1; width:min(100%,1020px); margin:0 auto; padding:40px 28px 64px;}
+.micro{font-family:var(--font-mono); font-size:.66rem; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent);}
+h1{font-family:var(--font-display); font-size:52px; line-height:.95;
+  letter-spacing:-.04em; margin:10px 0 8px; text-wrap:balance;}
+.lede{max-width:62ch; color:var(--text-muted); margin:0;}
+.page-header{display:grid; grid-template-columns:1fr auto; align-items:start;
+  gap:16px; border-bottom:2px solid var(--border); padding-bottom:18px; margin-bottom:0;}
+.pill{font-family:var(--font-mono); font-size:.62rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; padding:5px 9px; border:1px solid var(--border); white-space:nowrap;}
+.pill.solid{background:var(--border); color:#fff;}
+.pill.teal{border-color:var(--accent); color:var(--accent);}
+.status-col{display:grid; gap:6px; justify-items:end;}
+.strip{display:grid; grid-template-columns:repeat(5,1fr); background:var(--accent-light);
+  border:1px solid var(--border); border-top:0; margin-bottom:28px;}
+.strip div{padding:12px 14px; border-right:1px solid var(--border-light);}
+.strip div:last-child{border-right:0;}
+.strip b{display:block; font-family:var(--font-display); font-size:26px; line-height:1;
+  letter-spacing:-.03em; font-variant-numeric:tabular-nums;}
+.strip span{display:block; margin-top:5px; font-family:var(--font-mono); font-size:.58rem;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted);}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+.module{background:var(--surface); border:2px solid var(--border); margin-bottom:16px;
+  min-width:0; break-inside:avoid;}
+.module-head{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:baseline;
+  padding:9px 12px; border-bottom:1px solid var(--border-light);}
+.module-label{font-family:var(--font-mono); font-size:.62rem; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase;}
+.module-meta{font-family:var(--font-mono); font-size:.58rem; color:var(--text-muted);
+  letter-spacing:.06em;}
+pre.kt{margin:0; padding:14px 12px; background:var(--surface); overflow-x:auto;
+  font-family:var(--font-mono); font-size:13.5px; line-height:1.3;
+  white-space:pre; max-width:100%;}
+pre.kt.tint{background:var(--accent-light);}
+.note{margin:0; padding:9px 12px; border-top:1px solid var(--border-light);
+  font-size:12.5px; color:var(--text-muted);}
+.note b{color:var(--text); font-weight:600;}
+.note code{font-family:var(--font-mono); font-size:11.5px; color:var(--text);
+  background:var(--accent-light); border:1px solid var(--accent-soft);
+  padding:0 3px; white-space:nowrap;}
+table{gap:0; width:100%; border-collapse:collapse; font-family:var(--font-mono); font-size:12px;}
+th,td{text-align:left; padding:7px 12px; border-bottom:1px solid var(--border-light); vertical-align:top;}
+th{font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted);}
+td.g{font-size:15px; color:var(--accent); width:64px;}
+td.m{color:var(--text-muted);}
+.ok{color:#166534;} .bad{color:var(--danger);}
+h2{font-family:var(--font-display); font-size:22px; letter-spacing:-.02em; margin:32px 0 12px;
+  padding-bottom:7px; border-bottom:1px solid var(--border-light);}
+.foot{margin-top:28px; padding-top:14px; border-top:2px solid var(--border);
+  font-family:var(--font-mono); font-size:.6rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--text-muted); display:flex; justify-content:space-between;}
+</style></head>
+<body><div class="shell">
+  <div class="page-header">
+    <div>
+      <span class="micro">Konstrukt / proposal 01</span>
+      <h1>Text layer</h1>
+      <p class="lede">The same authority structure as Konstrukt, rebuilt for a
+      fixed cell: hard frames, mono metadata, one accent, status words. Charts,
+      annotations and CLI motion from one token set, one linter, two encodings.</p>
+    </div>
+    <div class="status-col">
+      <span class="pill solid">PROPOSED</span>
+      <span class="pill teal">NOT IN BUILD</span>
+    </div>
+  </div>
+  <div class="strip">
+    <div><b>14</b><span>rules</span></div>
+    <div><b>9</b><span>primitives</span></div>
+    <div><b>2</b><span>encodings</span></div>
+    <div><b>11</b><span>linter checks</span></div>
+    <div><b>44</b><span>chat columns</span></div>
+  </div>
+
+  <h2>Charts</h2>
+  <div class="grid2">
+    <div class="module"><div class="module-head"><span class="module-label">SPARK</span><span class="module-meta">01 · one row · self-normalised</span></div><pre class="kt">   ▁▃▅▇█▇▅▃ temp 53→74°    ▁▂▃▅▆▆▄▃ rain
+                               ▲
+                peak 78% 17:00</pre><p class="note"><b>Shape is not magnitude.</b> Numbers ride on the same line. Caret is derived from the rendered string, never hand-counted.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">HBAR</span><span class="module-meta">02 · fixed scale</span></div><pre class="kt">  Deep work        █████░░░    62%
+  Client delivery  ███░░░░░    38%
+  Admin            █░░░░░░░     9%</pre><p class="note"><b>Bounded domains pin their scale.</b> 9% cannot render as a full bar. Cells are the unit; the value is right-aligned.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">GRID</span><span class="module-meta">03 · 4-step ladder</span></div><pre class="kt">             M T W T F S S
+  WK 40      ▒   ▓   ░ █
+  WK 41      ▓   ░   ▒
+  WK 42      █   ▒   ▓</pre><p class="note"><b>Pattern over time.</b> Blank cells are absence, not zero, so rows rstrip.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">RANGE</span><span class="module-meta">04 · span plus position</span></div><pre class="kt">  MON  ····▒▒▒▲▒▒▒·····  7.4h
+  TUE  ···▒▲▒▒▒▒▒······  6.1h
+  WED  ·····▒▒▒▒▲▒▒····  8.2h</pre><p class="note">For a sleep window or a price band, where the range carries as much meaning as the point.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">MULTI</span><span class="module-meta">05 · small multiples, one scale</span></div><pre class="kt">  WK 40  ▂▅▄▇▃▁▁
+  WK 41  ▄▅▆▄▅▂▁
+  WK 42  ▃▃▅█▄▁▁</pre><p class="note"><b>Shared scale is the point.</b> Three independent sparklines cannot be compared; three rows sharing a range can.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">ANNOTATION GRAMMAR</span><span class="module-meta">06 · caret and label</span></div><pre class="kt">   ▁▃▆█▆▃ temp 53→74°
+        ▲
+        caret anchors to its column
+
+   ▁▃▆█▆▃   ▁▃▆▆▄▃
+                ▲
+        label 78% 17:00   label slides left at the edge</pre><p class="note">The label slides; the caret never moves. That is what keeps a clean block inside the column budget.</p></div>
+  </div>
+
+  <h2>Composition</h2>
+  <div class="grid2">
+    <div class="module"><div class="module-head"><span class="module-label">FRAME</span><span class="module-meta">07 · a module, in text</span></div><pre class="kt">┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ SERVICE                     STATUS WATCH ┃
+┃━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┃
+┃ ● uptime        99.98%                   ┃
+┃ · latency       42 ms                    ┃
+┃ · next run      Nov 12                   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛</pre><p class="note">Heavy box = <b>--border</b> 2px. Single box = <b>--border-light</b>. Label left, meta right-aligned to the row end.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">KV</span><span class="module-meta">08 · metadata with dot leaders</span></div><pre class="kt">  next appt    ····················· Nov 12
+  meds         ··················· 3 active
+  records      ··················· 11 of 12</pre><p class="note">The text form of <b>.row-meta</b>. Leaders keep the eye on the value column without a second border.</p></div>
+  </div>
+
+  <h2>CLI</h2>
+  <div class="grid2">
+    <div class="module"><div class="module-head"><span class="module-label">MOTION</span><span class="module-meta">09 · resolves</span></div><pre class="kt">  ▁ syncing 3 sources
+  ▁▂▃▄▅  frame 5 of 8
+
+┌──────────────────────────────────────────┐
+│ SYNC                           DONE 2.1s │
+│──────────────────────────────────────────│
+│ calendar   ████████  ok                  │
+│ weather    ██████░░  partial             │
+│ gmail      ████████  ok                  │
+└──────────────────────────────────────────┘</pre><p class="note"><b>Animation ends in a terminal state.</b> Never animate a number. Reduced motion means printing only the resolved frame.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">RULER</span><span class="module-meta">measuring device, not a chart</span></div><pre class="kt">  0123456789012345678901234567890123456789
+  |····|····|····|····|····|····|····|····</pre><p class="note">The width contract depends on the client font, so the system ships a probe. Paste it once; if it comes back ragged, charts go in a code block.</p></div>
+  </div>
+
+  <h2>Encoding</h2>
+  <div class="grid2">
+    <div class="module"><div class="module-head"><span class="module-label">ASCII FALLBACK</span><span class="module-meta">same ladder positions</span></div><pre class="kt">  unicode  ▁▃▅▇█▇▅▃ temp 53→74°
+  ascii    .-+#@#+- temp 53→74°
+
+  unicode  █████░░░  62%
+  ascii    #####...  62%
+
+  marks    ▲ ● › ·        caret, on, lead-in, idle
+           ^ o &gt; .        ascii equivalents</pre><p class="note"><code>.:-=+*#@</code> replaces the block ladder, <code>-=#@</code> replaces the bar ladder, <code>+ - | =</code> replaces box drawing. Degraded resolution, identical language, for SMS, logs and broken fonts.</p></div>
+    <div class="module"><div class="module-head"><span class="module-label">RESERVED GLYPHS</span><span class="module-meta">no second meaning</span></div><table><thead><tr><th>Mark</th><th>Already means</th></tr></thead><tbody><tr><td class="g">↑</td><td class="m">high temperature / increase</td></tr><tr><td class="g">↓</td><td class="m">low temperature / decrease</td></tr><tr><td class="g">▲</td><td class="m">caret: points at the column annotated below</td></tr><tr><td class="g">›</td><td class="m">bullet / list lead-in</td></tr><tr><td class="g">·</td><td class="m">separator or idle state</td></tr><tr><td class="g">●</td><td class="m">active or present</td></tr><tr><td class="g">[NORMAL]</td><td class="m">status pill</td></tr><tr><td class="g">▁▂▃▄▅▆▇█</td><td class="m">data ladder: height means magnitude</td></tr><tr><td class="g">▘▝▗▖</td><td class="m">motion only: never carries a value</td></tr></tbody></table><p class="note">A mark already spent on one meaning is not available for another. Wind arrows are the live collision.</p></div>
+  </div>
+
+  <h2>Enforcement</h2>
+  <div class="module"><div class="module-head"><span class="module-label">LINTER</span><span class="module-meta">self-test · 11 of 11 rules caught</span></div><table><thead><tr><th>Rule</th><th>Caught in the seeded block</th></tr></thead><tbody><tr><td class="g">T5</td><td class="m">sparkline with no number on the line; shape is not magnitude</td></tr><tr><td class="g">T4</td><td class="m">bar and sparkline ladders mixed in one line</td></tr><tr><td class="g">T2</td><td class="m">tab character; pad with spaces</td></tr><tr><td class="g">T6</td><td class="m">bar shows 3/8 cells but the label says 80% (expected 6)</td></tr><tr><td class="g">T9</td><td class="m">emoji &#x27;🔥&#x27; used as a data mark</td></tr><tr><td class="g">T7</td><td class="m">caret at column 26 points past its row (23 wide)</td></tr><tr><td class="g">T1</td><td class="m">46 columns exceeds budget 44</td></tr><tr><td class="g">T10</td><td class="m">↑ without an adjacent number (arrows mean high/low, not direction)</td></tr><tr><td class="g">T3</td><td class="m">trailing whitespace</td></tr><tr><td class="g">T11</td><td class="m">two series on one line with no label for either</td></tr><tr><td class="g">T8</td><td class="m">frame lines disagree on width: [30, 35]</td></tr></tbody></table><p class="note">One deliberately broken construct per rule. The linter runs in the build gate, so a chart cannot ship with a lying bar.</p></div>
+  <div class="module"><div class="module-head"><span class="module-label">LIVE CONSUMER</span><span class="module-meta">morning brief weather microchart</span></div><pre class="kt">  wet day, live path        38 cols   clean
+  same chart, 15 raw hours  54 cols   T1 over budget</pre><p class="note">The shipped path pre-samples to 8 points, so it passes today. The primitive owns no column contract, so a caller that hands it raw hourly data renders 54 columns and nothing complains. Sampling moves into the primitive.</p></div>
+  <div class="foot"><span>Konstrukt · Text · proposal</span>
+    <span>rendered from scripts/text_layer_prototype.py</span></div>
+</div></body></html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F5F0">
+  <title>Typography — Konstrukt</title>
+  <link rel="stylesheet" href="assets/konstrukt.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="css/docs.css">
+  <script src="assets/theme.js"></script>
+  <script src="js/docs.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="micro-label">Reference</p>
+      <h1>Typography</h1>
+      <p class="tagline">Space Grotesk sets display and headings; Inter carries body copy; SF Mono is reserved for code and values.</p>
+    </header>
+
+    <h2 class="section-label"><span class="micro-label">Families</span></h2>
+    <section class="module">
+      <table class="data-table">
+        <thead><tr><th>Role</th><th>Token</th><th>Family</th></tr></thead>
+        <tbody>
+          <tr><td>Display</td><td><code class="inline">--font-display</code></td><td style="font-family:var(--font-display)">Space Grotesk</td></tr>
+          <tr><td>Body</td><td><code class="inline">--font-sans</code></td><td style="font-family:var(--font-sans)">Inter</td></tr>
+          <tr><td>Mono</td><td><code class="inline">--font-mono</code></td><td style="font-family:var(--font-mono)">SF Mono</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Scale</span></h2>
+    <section class="module">
+      <div class="specimen">
+        <h1>Display heading</h1>
+        <p class="spec-meta">h1 · Space Grotesk 700 · 3.5rem · letter-spacing -0.03em</p>
+      </div>
+      <div class="specimen">
+        <h2>Section heading</h2>
+        <p class="spec-meta">h2 · Space Grotesk 700 · 1.5rem · letter-spacing -0.02em</p>
+      </div>
+      <div class="specimen">
+        <h3>Subsection heading</h3>
+        <p class="spec-meta">h3 · Space Grotesk 600 · 1rem · uppercase · letter-spacing 0.04em</p>
+      </div>
+      <div class="specimen">
+        <p class="micro-label">Micro label</p>
+        <p class="spec-meta">.micro-label · Space Grotesk 700 · 0.6875rem · uppercase · letter-spacing 0.08em</p>
+      </div>
+      <div class="specimen">
+        <p>Body copy uses Inter at a comfortable 1.65 line height. It is built to carry long-form strategy notes, tables, and documentation without strain. The measure is capped so lines stay readable.</p>
+        <p class="spec-meta">body · Inter 400 · line-height 1.65</p>
+      </div>
+      <div class="specimen">
+        <p class="mono">const accent = "#067F8A";</p>
+        <p class="spec-meta">.mono · SF Mono · 0.8125rem</p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Konstrukt · Typography</p>
+    </footer>
+  </main>
+</body>
+</html>

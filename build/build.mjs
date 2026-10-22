@@ -1,0 +1,313 @@
+/**
+ * Konstrukt build — JSON tokens -> CSS, Swift, and a JSON manifest.
+ *
+ * CSS is produced with Style Dictionary: one build per selector block via a
+ * custom `konstrukt/css` format, concatenated into a single stylesheet that
+ * reproduces the canonical palette x mode cascade. Swift and JSON outputs are
+ * derived from the same token files so every surface stays in lock-step.
+ */
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, cpSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { resolve, join } from 'node:path';
+import StyleDictionary from 'style-dictionary';
+import { cssBlocks, swiftThemes, palettes, fontImport } from './themes.mjs';
+import { projectRoot, mergeSources, flatten, resolveValue } from './lib.mjs';
+
+const dist = resolve(projectRoot, 'dist');
+const distCss = join(dist, 'css');
+const distSwift = join(dist, 'swift', 'Konstrukt');
+
+StyleDictionary.registerFormat({
+  name: 'konstrukt/css',
+  format: ({ dictionary, options }) => {
+    const { selector, prelude } = options;
+    const lines = dictionary.allTokens.map(
+      (token) => `  --${token.path.join('-')}: ${token.$value ?? token.value};`
+    );
+    if (prelude) lines.unshift(`  ${prelude}`);
+    return `${selector} {\n${lines.join('\n')}\n}\n`;
+  },
+});
+
+async function buildCss() {
+  const tmp = mkdtempSync(join(tmpdir(), 'konstrukt-'));
+  const blocks = [];
+  for (const block of cssBlocks) {
+    const sd = new StyleDictionary(
+      {
+        usesDtcg: true,
+        tokens: mergeSources(block.sources),
+        platforms: {
+          css: {
+            transforms: [],
+            buildPath: `${tmp}/`,
+            files: [
+              {
+                destination: `${block.key}.css`,
+                format: 'konstrukt/css',
+                options: { selector: block.selector, prelude: block.prelude },
+              },
+            ],
+          },
+        },
+      },
+      { verbosity: 'silent' }
+    );
+    await sd.buildAllPlatforms();
+    blocks.push(readFileSync(join(tmp, `${block.key}.css`), 'utf8').trimEnd());
+  }
+  rmSync(tmp, { recursive: true, force: true });
+
+  const header = [
+    fontImport,
+    '',
+    '/**',
+    ' * Konstrukt Design System — generated tokens. DO NOT EDIT BY HAND.',
+    ' * Source: apps/konstrukt/tokens/*.json — run `npm run build`.',
+    ' *',
+    ' * Aesthetic: Bauhaus / Swiss International Typographic Style.',
+    ' * Two orthogonal axes on <html>:',
+    ' *   data-palette : atelier | courage | minimal | hl | blueprint',
+    ' *                  (legacy alias `sqdl` rendered the same as `hl`)',
+    ' *   data-mode    : light | dark   (legacy alias [data-theme="dark"])',
+    ' */',
+    '',
+  ].join('\n');
+
+  mkdirSync(distCss, { recursive: true });
+  writeFileSync(join(distCss, 'konstrukt.css'), `${header}\n${blocks.join('\n\n')}\n`);
+  return cssBlocks.length;
+}
+
+function kebabToCamel(name) {
+  return name.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
+}
+
+function resolvedMap(sources) {
+  const tokens = flatten(mergeSources(sources));
+  const lookup = Object.fromEntries(tokens.map((t) => [t.name, t.value]));
+  const out = {};
+  for (const t of tokens) out[t.name] = { value: resolveValue(t.value, lookup), type: t.type };
+  return out;
+}
+
+function buildJsonManifest() {
+  const globals = resolvedMap(['tokens/global.json']);
+  const themes = {};
+  for (const { palette, mode, sources } of swiftThemes) {
+    themes[`${palette}.${mode}`] = resolvedMap(sources);
+  }
+  const manifest = {
+    name: 'konstrukt',
+    description: 'The Hooman Loop design system — resolved design tokens.',
+    generated: new Date().toISOString().slice(0, 10),
+    palettes,
+    modes: ['light', 'dark'],
+    global: globals,
+    themes,
+  };
+  mkdirSync(dist, { recursive: true });
+  writeFileSync(join(dist, 'tokens.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+}
+
+function firstFontFamily(value) {
+  const first = String(value).split(',')[0].trim();
+  return first.replace(/^["']|["']$/g, '');
+}
+
+function buildSwift() {
+  // Color fields = semantic color tokens (shared across every theme).
+  const semantic = flatten(mergeSources(['tokens/semantic.json']));
+  const colorNames = semantic.filter((t) => t.type === 'color').map((t) => t.name);
+
+  const themeConsts = swiftThemes.map(({ palette, mode, sources }) => {
+    const map = resolvedMap(sources);
+    const args = colorNames
+      .map((name) => `        ${kebabToCamel(name)}: Color(hex: "${map[name].value}")`)
+      .join(',\n');
+    return `    static let ${palette}${mode === 'dark' ? 'Dark' : 'Light'} = KonstruktTheme(\n${args}\n    )`;
+  });
+
+  const switchCases = swiftThemes
+    .map(
+      ({ palette, mode }) =>
+        `        case (.${palette}, .${mode}): return ${palette}${mode === 'dark' ? 'Dark' : 'Light'}`
+    )
+    .join('\n');
+
+  const fields = colorNames.map((name) => `    public let ${kebabToCamel(name)}: Color`).join('\n');
+  const initArgs = colorNames.map((name) => `${kebabToCamel(name)}: Color`).join(', ');
+  const initBody = colorNames
+    .map((name) => `        self.${kebabToCamel(name)} = ${kebabToCamel(name)}`)
+    .join('\n');
+
+  // Global constants (palette/mode independent).
+  const globals = resolvedMap(['tokens/global.json']);
+  const spacing = Object.entries(globals)
+    .filter(([n]) => n.startsWith('sp-'))
+    .map(([n, v]) => `    public static let sp${n.slice(3)}: CGFloat = ${parseFloat(v.value)}`)
+    .join('\n');
+  const fonts = [
+    `    public static let display = "${firstFontFamily(globals['font-display'].value)}"`,
+    `    public static let sans = "${firstFontFamily(globals['font-sans'].value)}"`,
+    `    public static let mono = "${firstFontFamily(globals['font-mono'].value)}"`,
+  ].join('\n');
+  const swatches = Object.entries(globals)
+    .filter(([n]) => n.startsWith('swatch-'))
+    .map(([n, v]) => `    public static let ${kebabToCamel(n.slice(8))} = Color(hex: "${v.value}")`)
+    .join('\n');
+
+  const swift = `// Konstrukt Design System — generated Swift tokens. DO NOT EDIT BY HAND.
+// Source: apps/konstrukt/tokens/*.json — run \`npm run build\`.
+//
+// Bauhaus / Swiss International style. Two axes: palette x mode.
+
+import SwiftUI
+
+public enum KonstruktPalette: String, CaseIterable, Sendable {
+    case ${palettes.join(', ')}
+}
+
+public enum KonstruktMode: String, CaseIterable, Sendable {
+    case light, dark
+}
+
+public struct KonstruktTheme: Sendable, Equatable {
+${fields}
+
+    public init(${initArgs}) {
+${initBody}
+    }
+}
+
+public extension KonstruktTheme {
+    /// Resolve a theme for the given palette and mode.
+    static func theme(palette: KonstruktPalette = .atelier, mode: KonstruktMode = .light) -> KonstruktTheme {
+        switch (palette, mode) {
+${switchCases}
+        }
+    }
+
+${themeConsts.join('\n\n')}
+}
+
+/// 4px spacing grid.
+public enum KonstruktSpacing {
+${spacing}
+}
+
+public enum KonstruktRadius {
+    public static let base: CGFloat = ${parseFloat(globals['radius'].value)}
+}
+
+/// Font family names. Register the fonts in your app bundle to use them.
+public enum KonstruktFont {
+${fonts}
+}
+
+/// Theme-switcher swatch colors (constant across modes).
+public enum KonstruktSwatch {
+${swatches}
+}
+
+// MARK: - SwiftUI environment
+
+public struct KonstruktThemeKey: EnvironmentKey {
+    public static let defaultValue = KonstruktTheme.atelierLight
+}
+
+public extension EnvironmentValues {
+    var konstruktTheme: KonstruktTheme {
+        get { self[KonstruktThemeKey.self] }
+        set { self[KonstruktThemeKey.self] = newValue }
+    }
+}
+
+public extension View {
+    /// Inject a Konstrukt theme into the environment for this subtree.
+    func konstruktTheme(palette: KonstruktPalette = .atelier, mode: KonstruktMode = .light) -> some View {
+        environment(\\.konstruktTheme, KonstruktTheme.theme(palette: palette, mode: mode))
+    }
+}
+
+// MARK: - Color(hex:)
+
+public extension Color {
+    init(hex: String) {
+        let cleaned = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        var value: UInt64 = 0
+        Scanner(string: cleaned).scanHexInt64(&value)
+        let r, g, b, a: Double
+        switch cleaned.count {
+        case 8:
+            r = Double((value & 0xFF00_0000) >> 24) / 255
+            g = Double((value & 0x00FF_0000) >> 16) / 255
+            b = Double((value & 0x0000_FF00) >> 8) / 255
+            a = Double(value & 0x0000_00FF) / 255
+        default:
+            r = Double((value & 0xFF0000) >> 16) / 255
+            g = Double((value & 0x00FF00) >> 8) / 255
+            b = Double(value & 0x0000FF) / 255
+            a = 1
+        }
+        self.init(.sRGB, red: r, green: g, blue: b, opacity: a)
+    }
+}
+`;
+
+  const pkg = `// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: "Konstrukt",
+    platforms: [.iOS(.v15), .macOS(.v12)],
+    products: [
+        .library(name: "Konstrukt", targets: ["Konstrukt"]),
+    ],
+    targets: [
+        .target(name: "Konstrukt"),
+    ]
+)
+`;
+
+  const sourcesDir = join(distSwift, 'Sources', 'Konstrukt');
+  mkdirSync(sourcesDir, { recursive: true });
+  writeFileSync(join(distSwift, 'Package.swift'), pkg);
+  writeFileSync(join(sourcesDir, 'Konstrukt.swift'), swift);
+}
+
+function copyStaticAssets() {
+  mkdirSync(distCss, { recursive: true });
+  cpSync(resolve(projectRoot, 'src', 'base.css'), join(distCss, 'base.css'));
+  cpSync(resolve(projectRoot, 'src', 'theme.js'), join(distCss, 'theme.js'));
+}
+
+/** Mirror generated assets into docs/assets so the docs site is self-contained. */
+function copyDocsAssets() {
+  const docsAssets = resolve(projectRoot, 'docs', 'assets');
+  mkdirSync(docsAssets, { recursive: true });
+  cpSync(join(distCss, 'konstrukt.css'), join(docsAssets, 'konstrukt.css'));
+  cpSync(join(distCss, 'base.css'), join(docsAssets, 'base.css'));
+  cpSync(join(distCss, 'theme.js'), join(docsAssets, 'theme.js'));
+  cpSync(join(dist, 'tokens.json'), join(docsAssets, 'tokens.json'));
+}
+
+async function main() {
+  rmSync(dist, { recursive: true, force: true });
+  const blockCount = await buildCss();
+  buildJsonManifest();
+  buildSwift();
+  copyStaticAssets();
+  copyDocsAssets();
+  console.log(`Konstrukt build complete:`);
+  console.log(`  dist/css/konstrukt.css   (${blockCount} selector blocks)`);
+  console.log(`  dist/css/base.css        (portable components)`);
+  console.log(`  dist/css/theme.js        (HLTheme runtime)`);
+  console.log(`  dist/tokens.json         (${swiftThemes.length} resolved themes)`);
+  console.log(`  dist/swift/Konstrukt/    (Swift package)`);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

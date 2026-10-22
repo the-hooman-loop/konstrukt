@@ -1,0 +1,57 @@
+{
+  "bg":           { "$type": "color", "$value": "#121212" },
+  "bg-alt":       { "$type": "color", "$value": "#1A1A1A" },
+  "surface":      { "$type": "color", "$value": "#1E1E22" },
+  "card":         { "$type": "color", "$value": "#1E1E22" },
+  "text":         { "$type": "color", "$value": "#E6E6E0" },
+  "text-muted":   { "$type": "color", "$value": "#94948C" },
+  "muted":        { "$type": "color", "$value": "#94948C" },
+  "ink":          { "$type": "color", "$value": "#E6E6E0" },
+  "border":       { "$type": "color", "$value": "#4D4D49" },
+  "border-light": { "$type": "color", "$value": "#2E2E2C" },
+  "accent":       { "$type": "color", "$value": "#2ABFCC" },
+  "accent-soft":  { "$type": "color", "$value": "#0D3D40" },
+  "accent-light": { "$type": "color", "$value": "#082A2D" },
+  "done":    { "$type": "color", "$value": "#4ADE80" },
+  "done-bg": { "$type": "color", "$value": "#052E16" },
+  "badge": {
+    "draft":    { "$type": "color", "$value": "#D0D0C8" },
+    "review":   { "$type": "color", "$value": "#2ABFCC" },
+    "complete": { "$type": "color", "$value": "#4ADE80" }
+  },
+  "status": {
+    "draft-bg":       { "$type": "color", "$value": "#1E1E1C" },
+    "draft":          { "$type": "color", "$value": "#8A8A80" },
+    "review-bg":      { "$type": "color", "$value": "#0D3D40" },
+    "review":         { "$type": "color", "$value": "#2ABFCC" },
+    "complete-bg":    { "$type": "color", "$value": "#052E16" },
+    "complete":       { "$type": "color", "$value": "#4ADE80" },
+    "in-progress-bg": { "$type": "color", "$value": "#422006" },
+    "in-progress":    { "$type": "color", "$value": "#FDE68A" },
+    "launched-bg":    { "$type": "color", "$value": "#1E3A5F" },
+    "launched":       { "$type": "color", "$value": "#93C5FD" }
+  },
+  "tag": {
+    "builders-bg":    { "$type": "color", "$value": "#1E3A5F" },
+    "builders":       { "$type": "color", "$value": "#93C5FD" },
+    "builders-text":  { "$type": "color", "$value": "#93C5FD" },
+    "operators-bg":   { "$type": "color", "$value": "#2E1065" },
+    "operators":      { "$type": "color", "$value": "#C4B5FD" },
+    "operators-text": { "$type": "color", "$value": "#C4B5FD" },
+    "learners-bg":    { "$type": "color", "$value": "#3D2400" },
+    "learners":       { "$type": "color", "$value": "#FDE68A" },
+    "learners-text":  { "$type": "color", "$value": "#FDE68A" }
+  },
+  "beachhead-bg": { "$type": "color", "$value": "#422006" },
+  "beachhead":    { "$type": "color", "$value": "#FDE68A" },
+  "selection-bg": { "$type": "color", "$value": "#FACC15" },
+  "selection-fg": { "$type": "color", "$value": "#121212" },
+  "shadow": { "$type": "other", "$value": "none" },
+  "invoice": {
+    "overdue":    { "$type": "color", "$value": "#F87171" },
+    "overdue-bg": { "$type": "color", "$value": "#450A0A" }
+  },
+  "timeline": {
+    "today": { "$type": "color", "$value": "#F87171" }
+  }
+}
