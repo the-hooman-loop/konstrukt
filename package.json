@@ -2,8 +2,17 @@
   "name": "@hooman-loop/konstrukt",
   "version": "1.0.0",
   "description": "Konstrukt — The Hooman Loop design system. JSON-first design tokens with CSS, Swift/SwiftUI, and JSON exports.",
+  "author": "The Hooman Loop",
+  "homepage": "https://thehoomanloop.com/konstrukt",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-hooman-loop/konstrukt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/the-hooman-loop/konstrukt/issues"
+  },
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "node build/build.mjs",
