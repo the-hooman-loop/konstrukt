@@ -79,15 +79,15 @@ h2{font-family:var(--font-display); font-size:22px; letter-spacing:-.02em; margi
 <body><div class="shell">
   <div class="page-header">
     <div>
-      <span class="micro">Konstrukt / proposal 01</span>
+      <span class="micro">Konstrukt / text</span>
       <h1>Text layer</h1>
       <p class="lede">The same authority structure as Konstrukt, rebuilt for a
       fixed cell: hard frames, mono metadata, one accent, status words. Charts,
       annotations and CLI motion from one token set, one linter, two encodings.</p>
     </div>
     <div class="status-col">
-      <span class="pill solid">PROPOSED</span>
-      <span class="pill teal">NOT IN BUILD</span>
+      <span class="pill solid">SHIPPED</span>
+      <span class="pill teal">IN BUILD</span>
     </div>
   </div>
   <div class="strip">
@@ -171,7 +171,7 @@ h2{font-family:var(--font-display); font-size:22px; letter-spacing:-.02em; margi
   <h2>Enforcement</h2>
   <div class="module"><div class="module-head"><span class="module-label">LINTER</span><span class="module-meta">self-test · 11 of 11 rules caught</span></div><table><thead><tr><th>Rule</th><th>Caught in the seeded block</th></tr></thead><tbody><tr><td class="g">T5</td><td class="m">sparkline with no number on the line; shape is not magnitude</td></tr><tr><td class="g">T4</td><td class="m">bar and sparkline ladders mixed in one line</td></tr><tr><td class="g">T2</td><td class="m">tab character; pad with spaces</td></tr><tr><td class="g">T6</td><td class="m">bar shows 3/8 cells but the label says 80% (expected 6)</td></tr><tr><td class="g">T9</td><td class="m">emoji &#x27;🔥&#x27; used as a data mark</td></tr><tr><td class="g">T7</td><td class="m">caret at column 26 points past its row (23 wide)</td></tr><tr><td class="g">T1</td><td class="m">46 columns exceeds budget 44</td></tr><tr><td class="g">T10</td><td class="m">↑ without an adjacent number (arrows mean high/low, not direction)</td></tr><tr><td class="g">T3</td><td class="m">trailing whitespace</td></tr><tr><td class="g">T11</td><td class="m">two series on one line with no label for either</td></tr><tr><td class="g">T8</td><td class="m">frame lines disagree on width: [30, 35]</td></tr></tbody></table><p class="note">One deliberately broken construct per rule. The linter runs in the build gate, so a chart cannot ship with a lying bar.</p></div>
   <div class="module"><div class="module-head"><span class="module-label">LIVE CONSUMER</span><span class="module-meta">morning brief weather microchart</span></div><pre class="kt">  wet day, live path        38 cols   clean
-  same chart, 15 raw hours  54 cols   T1 over budget</pre><p class="note">The shipped path pre-samples to 8 points, so it passes today. The primitive owns no column contract, so a caller that hands it raw hourly data renders 54 columns and nothing complains. Sampling moves into the primitive.</p></div>
-  <div class="foot"><span>Konstrukt · Text · proposal</span>
-    <span>rendered from scripts/text_layer_prototype.py</span></div>
+  same chart, 15 raw hours  54 cols   T1 over budget</pre><p class="note">The shipped primitive pre-samples to 8 points. A caller that bypasses it and hands raw hourly data still renders 54 columns; the linter catches that as T1. Sampling belongs in the primitive, not in each consumer.</p></div>
+  <div class="foot"><span>Konstrukt · Text · v1.2.0</span>
+    <span>rendered from src/text/renderer.py</span></div>
 </div></body></html>

@@ -5,6 +5,7 @@
     ['tokens.html', 'Tokens'],
     ['typography.html', 'Typography'],
     ['components.html', 'Components'],
+    ['text.html', 'Text'],
     ['ios.html', 'iOS'],
   ];
 

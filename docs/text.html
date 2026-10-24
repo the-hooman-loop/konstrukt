@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F5F5F0">
+  <title>Text layer — Konstrukt</title>
+  <link rel="stylesheet" href="assets/konstrukt.css">
+  <link rel="stylesheet" href="assets/base.css">
+  <link rel="stylesheet" href="assets/text.css">
+  <link rel="stylesheet" href="css/docs.css">
+  <script src="assets/theme.js"></script>
+  <script src="js/docs.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="micro-label">Reference</p>
+      <h1>Text layer</h1>
+      <p class="tagline">Charts, annotations and CLI motion for channels that render characters instead of pixels. Nine primitives, two encodings, one linter. Shipped in 1.2.0 as part of the versioned contract.</p>
+    </header>
+
+    <h2 class="section-label"><span class="micro-label">Consume it</span></h2>
+    <section class="module">
+      <p class="lede">Glyph ladders, column budgets and reserved marks are authored in <code class="inline">tokens/text.json</code>. <code class="inline">npm run build</code> emits the resolved spec and a self-contained Python renderer. Do not read <code class="inline">tokens/</code> from a consumer.</p>
+      <pre class="code">npm run build
+python3 dist/text.py --encoding unicode   # review board
+python3 src/text/lint.py --file chart.txt --budget 44
+npm run check:text                        # linter + golden board</pre>
+      <table class="data-table">
+        <thead><tr><th>Output</th><th>For</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">dist/text.py</code></td><td>Vendored into cron collectors, briefings, CLI tools</td></tr>
+          <tr><td><code class="inline">dist/text.json</code></td><td>Raw ladders and column budgets</td></tr>
+          <tr><td><code class="inline">dist/tokens.json</code> → <code class="inline">text</code></td><td>Same spec, next to the colour manifest</td></tr>
+          <tr><td><code class="inline">dist/css/text.css</code></td><td><code class="inline">pre.kt</code> embed styles</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Nine primitives</span></h2>
+    <section class="module">
+      <p>A closed set. Anything else is composition. Each function returns a string.</p>
+      <table class="data-table">
+        <thead><tr><th>Primitive</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">spark</code></td><td>One row, self-normalised curve. Sampling lives inside the primitive.</td></tr>
+          <tr><td><code class="inline">hbar</code></td><td>Fixed-scale bar. Bounded domains pin 0–100 so 9% cannot fill the row.</td></tr>
+          <tr><td><code class="inline">grid</code></td><td>N×M matrix on a 4-step ladder. Blank cells are absence, not zero.</td></tr>
+          <tr><td><code class="inline">range</code></td><td>A span with the current value marked inside it.</td></tr>
+          <tr><td><code class="inline">multi</code></td><td>Small multiples sharing one scale.</td></tr>
+          <tr><td><code class="inline">annotate</code></td><td>Caret under a column, derived from the rendered string.</td></tr>
+          <tr><td><code class="inline">kv</code></td><td>Key, dot leaders, value. The text form of <code class="inline">.row-meta</code>.</td></tr>
+          <tr><td><code class="inline">frame</code></td><td>A Konstrukt module in text: heavy frame, meta right-aligned.</td></tr>
+          <tr><td><code class="inline">ruler</code></td><td>Measuring probe. Paste once; ragged means the channel is proportional.</td></tr>
+        </tbody>
+      </table>
+      <p>The review sheet renders every primitive from the Python renderer, so the examples cannot drift from the grammar.</p>
+      <p><a href="text-review.html">Open the review sheet →</a></p>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Encodings</span></h2>
+    <section class="module">
+      <p class="lede">Same ladder positions, two renderings. <code class="inline">unicode</code> is the default. <code class="inline">ascii</code> is for SMS, logs, and terminals that mangle block glyphs.</p>
+      <pre class="kt">  unicode  ▁▃▅▇█▇▅▃ temp 53→74°
+  ascii    .-+#@#+- temp 53→74°
+
+  unicode  █████░░░  62%
+  ascii    #####...  62%</pre>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Rules that bite</span></h2>
+    <section class="module">
+      <table class="data-table">
+        <thead><tr><th>Id</th><th>Catches</th></tr></thead>
+        <tbody>
+          <tr><td>T1</td><td>line wider than the column budget</td></tr>
+          <tr><td>T5</td><td>a sparkline with no number on the line</td></tr>
+          <tr><td>T6</td><td>bar length contradicts the percentage beside it</td></tr>
+          <tr><td>T7</td><td>caret points past its row, or at whitespace</td></tr>
+          <tr><td>T11</td><td>two unlabeled series on one line</td></tr>
+        </tbody>
+      </table>
+      <p>Eleven checks in all. The spec is <a href="text.md">docs/text.md</a>.</p>
+    </section>
+
+    <footer class="site-footer">
+      <p>Konstrukt · The Hooman Loop Design System</p>
+      <p class="quote">The cell is the pixel.</p>
+    </footer>
+  </main>
+</body>
+</html>

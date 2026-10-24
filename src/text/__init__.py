@@ -1,0 +1,48 @@
+"""Konstrukt · Text — character-cell charts, annotations, and CLI motion."""
+
+from .lint import EXPECTED_RULES, SEEDED
+from .renderer import (
+    COLUMNS,
+    GLYPHS,
+    RESERVED,
+    SPEC,
+    annotate,
+    board,
+    frame,
+    g,
+    grid,
+    hbar,
+    kv,
+    multi,
+    peak_col,
+    pill,
+    range_bar,
+    row,
+    ruler,
+    sample,
+    spark,
+)
+
+__all__ = [
+    "COLUMNS",
+    "EXPECTED_RULES",
+    "GLYPHS",
+    "RESERVED",
+    "SEEDED",
+    "SPEC",
+    "annotate",
+    "board",
+    "frame",
+    "g",
+    "grid",
+    "hbar",
+    "kv",
+    "multi",
+    "peak_col",
+    "pill",
+    "range_bar",
+    "row",
+    "ruler",
+    "sample",
+    "spark",
+]

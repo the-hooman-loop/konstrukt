@@ -1,26 +1,31 @@
-# Konstrukt · Text — scope
+# Konstrukt · Text — spec
 
-Status: proposal. Nothing is wired into the build yet.
+Status: shipped in 1.2.0. Part of the versioned contract.
+
 Artifacts:
-- `scripts/text_layer_prototype.py` — reference renderer, prints the review board
-- `scripts/text_lint.py` — conformance linter, `--self-test` proves 11 of 11 checks
+- `tokens/text.json` — glyph ladders, column budgets, cell counts, reserved marks
+- `src/text/renderer.py` — reference renderer (source)
+- `src/text/lint.py` — conformance linter, `--self-test` proves 11 of 11 checks
+- `dist/text.json` — resolved spec, emitted by `npm run build`
+- `dist/text.py` — self-contained renderer for vendoring, baked from the tokens
+- `dist/css/text.css` — `pre.kt` embed styles for a Konstrukt page
+- `dist/tokens.json` — includes a top-level `text` block
 - `scripts/text_board_page.py` — builds the review sheet as a Konstrukt HTML page
 
 ## 1. The gap
 
-Konstrukt today is a *rendered surface* system. Its tokens are pixels: colour,
-spacing, radius, fonts. Every artifact that leaves the pixel world currently
-invents its own grammar.
+Konstrukt is a *rendered surface* system. Its colour tokens are pixels: colour,
+spacing, radius, fonts. Every artifact that leaves the pixel world used to
+invent its own grammar.
 
-- `briefing_calendar_context.py` holds `SPARK_GLYPHS = "▁▂▃▄▅▆▇█"`, a
-  hand-rolled `sparkline()`, `weather_microchart()`, and a 16-point compass
-  spelled out as a tuple.
-- The eight-column contract that makes that chart readable lives in a `wanted`
+- Briefing scripts held `SPARK_GLYPHS = "▁▂▃▄▅▆▇█"`, a hand-rolled
+  `sparkline()`, and a 16-point compass spelled out as a tuple.
+- The eight-column contract that makes that chart readable lived in a `wanted`
   set in the collector, not in the primitive. Hand the same primitive fifteen
-  hourly points and it renders 54 columns and nothing complains. Verified.
-- CLI status output, progress and spinners are written inline wherever needed.
-- The prompt that consumes it carries a paragraph of prose explaining how to
-  read the chart, because the chart has no spec to point at.
+  hourly points and it renders 54 columns and nothing complains.
+- CLI status output, progress and spinners were written inline wherever needed.
+- The prompt that consumed it carried a paragraph of prose explaining how to
+  read the chart, because the chart had no spec to point at.
 
 That is one working renderer. The drift risk is the second one: a new agent
 writes a 7-level ladder, or `#` bars beside `█` bars, or carets under the wrong
@@ -76,35 +81,38 @@ no data contract. The layer owns data marks, not pictures.
 
 ## 4. Tokens
 
-New file `tokens/text.json`, built into the same pipeline as the colour tokens.
+Authored in `tokens/text.json`, emitted by `npm run build` as `dist/text.json`
+and as the `text` block on `dist/tokens.json`. Consumers never read `tokens/`
+directly.
 
 ```json
 {
-  "text": {
-    "column": { "phone": 34, "chat": 44, "terminal": 78 },
-    "glyph": {
-      "unicode": {
-        "spark8": "▁▂▃▄▅▆▇█",
-        "bar4": "░▒▓█",
-        "hbar": { "on": "█", "off": "░" },
-        "box-light": { "tl": "┌", "tr": "┐", "bl": "└", "br": "┘", "h": "─", "v": "│" },
-        "box-ink":   { "tl": "┏", "tr": "┓", "bl": "┗", "br": "┛", "h": "━", "v": "┃" },
-        "mark": { "caret": "▲", "rule": "─", "dot": "·", "dot-on": "●", "pointer": "›" }
-      },
-      "ascii": { "...": "same keys, ascii values" }
+  "column": { "phone": 34, "chat": 44, "terminal": 78 },
+  "cells": { "spark": 8, "hbar": 8, "range": 16, "multi": 12 },
+  "glyph": {
+    "unicode": {
+      "spark8": "▁▂▃▄▅▆▇█",
+      "bar4": "░▒▓█",
+      "hbar": { "on": "█", "off": "░" },
+      "box-light": { "tl": "┌", "tr": "┐", "bl": "└", "br": "┘", "h": "─", "v": "│" },
+      "box-ink":   { "tl": "┏", "tr": "┓", "bl": "┗", "br": "┛", "h": "━", "v": "┃" },
+      "mark": { "caret": "▲", "rule": "─", "dot": "·", "dot-on": "●", "pointer": "›" },
+      "spin": "▘▝▗▖"
     },
-    "scale": { "percent": [0, 100] }
-  }
+    "ascii": { "...": "same keys, ascii values" }
+  },
+  "scale": { "percent": { "min": 0, "max": 100 } }
 }
 ```
 
-Glyph ladders become tokens because they are the thing that drifts. A ladder is
+Glyph ladders are tokens because they are the thing that drifts. A ladder is
 a design decision (how many levels before it reads as noise), not a string
 literal inside a cron script.
 
 ## 5. Nine primitives
 
-Closed set. Anything else is composition.
+Closed set. Anything else is composition. Implemented in `src/text/renderer.py`
+and baked into `dist/text.py`.
 
 1. **spark** — one row, N columns, self-normalised curve, with sampling inside
    the primitive so a caller cannot widen it by accident.
@@ -187,9 +195,9 @@ R11. **No mark carries two meanings.** A glyph already spent on one meaning is
      | `▁▂▃▄▅▆▇█` | data ladder: height means magnitude |
      | `▘▝▗▖` | motion only, never a value |
 
-     The live collision is wind: his weather widgets spend the arrows on
-     high/low, so `↑` next to a wind reading parses as a temperature trend.
-     Wind is spelled cardinal (`SSW`), never drawn.
+     The live collision is wind: weather widgets spend the arrows on high/low,
+     so `↑` next to a wind reading parses as a temperature trend. Wind is
+     spelled cardinal (`SSW`), never drawn.
 
 R12. **The ladder is a silhouette, not countable columns.** Adjacent block
      glyphs touch in a monospace font, so an eight-level spark reads as a filled
@@ -204,11 +212,12 @@ R13. **Eight levels need vertical room.** The same ladder rendered inside a
      magnitude in width and survives any size.
 
 R14. **A rule without a check is a preference.** Every rule above that can be
-     mechanised is mechanised in `scripts/text_lint.py` and runs in the gate.
+     mechanised is mechanised in `src/text/lint.py` and runs in the gate.
 
 ## 7. Enforcement
 
-`scripts/text_lint.py` judges a rendered block and exits nonzero. Eleven checks:
+`python3 src/text/lint.py` (or `scripts/text_lint.py`) judges a rendered block
+and exits nonzero. Eleven checks:
 
 | Id | Catches |
 |---|---|
@@ -231,72 +240,63 @@ The point is not tidiness. T6 is a truth check: a bar that says three cells and
 a label that says 80% is a chart lying about a number. T5 is the same failure
 in the other direction, a shape with nothing to anchor it.
 
-Applied to the live consumer, honestly:
+Applied to a live weather chart, honestly:
 
 ```
 wet day, live path        38 cols   clean
 same chart, 15 raw hours  54 cols   T1 over budget
 ```
 
-The shipped path pre-samples to eight points and passes. The primitive owns no
-column contract, so the same call with raw hourly data renders 54 columns. That
-is exactly the class of bug the token plus the gate exist to prevent, and it is
-already latent in the code that ships today.
+The shipped primitive pre-samples to eight points. A caller that bypasses it
+and hands raw hourly data still renders 54 columns; the linter catches that as
+T1. That is the class of bug the token plus the gate exist to prevent.
 
-## 8. Outputs and build integration
+`npm run check:text` runs the self-test, lints the reference board in both
+encodings, and diffs the board against `build/canonical-text-board.txt`. After
+`npm run build` it also requires `dist/text.py` to render byte-identical to the
+source renderer.
+
+## 8. Outputs
 
 Consumers are standalone Python scripts and shell tools that cannot take an npm
-dependency, so the build emits runtimes:
+dependency, so the build emits a vendored runtime plus the raw spec:
 
 | Output | Consumer |
 |---|---|
 | `dist/text.py` | cron collectors, briefings, mini CLI tools (vendored by copy) |
-| `dist/text.js` | docs page live demos, browser surfaces |
-| `dist/tokens.json` gains a `text` block | anything needing raw ladders |
-| `dist/css/text.css` | `pre`/`code` styling so a text block sits in a Konstrukt page |
+| `dist/text.json` | anything needing raw ladders without the renderer |
+| `dist/tokens.json` `text` block | same spec, next to the colour manifest |
+| `dist/css/text.css` | `pre.kt` styling so a text block sits in a Konstrukt page |
 
-```css
-/* the embedded form: a text block inside a Konstrukt page */
-pre.kt{font-family:var(--font-mono);font-size:13.5px;line-height:1.3;
-  background:var(--surface);border:2px solid var(--border);
-  padding:14px 12px;overflow-x:auto;white-space:pre;max-width:100%;}
-pre.kt.tint{background:var(--accent-light);}
+Stamp a vendored copy:
+
+```python
+# konstrukt-text v1.2.0  sha256:3f9c…  do not edit
 ```
 
-Three gates, and the third is the important one:
+A copy without a version stamp is indistinguishable from a fork.
+
+Gates:
 
 ```
-npm run check       # colour parity, exists today
-npm run check:text  # golden files: the same fixtures must render
-                    # byte-identical from text.py and text.js
-python3 scripts/text_lint.py --file <rendered> --budget 44
+npm run check       # colour parity
+npm run check:text  # linter + golden board + generated renderer
+python3 src/text/lint.py --file <rendered> --budget 44
 ```
 
-Golden files are the only thing that keeps three languages honest. Fixtures: a
-time series, a flat series, an empty series, a ranked set, a habit matrix, a
-long label, a narrow budget.
+There is no JavaScript renderer and no Swift text output in this release. The
+Python renderer is the supported implementation.
 
-## 9. Build order
+## 9. Still to do
 
-**P0. Extract, no behaviour change.** Move `SPARK_GLYPHS`, `sparkline`,
-`wind_cardinal` and the mark literals out of `briefing_calendar_context.py` into
-a vendored `text_layer.py`; add the linter to the brief's own check. The brief
-must render byte-identical before and after. Proves the seam with zero visible
-change.
+These are follow-ups, not part of 1.2.0:
 
-**P1. Tokens.** `tokens/text.json` plus a build step emitting `dist/text.py`.
-The prototype becomes that module. Acceptance: brief imports it, output
-identical, linter clean.
-
-**P2. Primitives.** Port `hbar`, `grid`, `range`, `multi`, `kv`, `annotate`,
-`frame`. Retrofit the live consumers below and delete the duplicated literals.
-
-**P3. Docs.** `docs/text.html` in the same anatomy as `components.html`: one
-`.spec` per primitive, a live `<pre class="spec-demo">` rendered by
-`dist/text.js`, a copy-ready snippet, and the rule stated as a rule. Then
-`npm run sync:konstrukt` publishes it at `thehoomanloop.com/konstrukt/text.html`.
-
-**P4. Optional.** Swift output for terminal tools on the mini.
+- A live `docs/text.html` demo page driven from a `dist/text.js` renderer, with
+  one section per primitive in the `components.html` anatomy.
+- Retrofit of live consumers (morning brief, weekly review, and the rest of
+  the table below) so they vendor `dist/text.py` and drop local glyph literals.
+- Optional Swift output for terminal tools on the mini.
+- Measured column budgets (see open questions).
 
 ## 10. Migration targets
 
@@ -323,21 +323,21 @@ Where the grammar pays for itself, in order of reach:
 
 ## 12. Open questions
 
-1. Separate package or same package with a second output? Recommendation: same
-   package. It shares the palette, the authority rules and the docs site, and
-   shares none of the px tokens, so a token file plus an output is enough. A
-   second repo would drift.
-2. Measured column budgets. The numbers in `COLUMNS` are proposals. Run `ruler`
-   in iPhone Telegram, Slack desktop, Slack iOS and Terminal with the same
-   fixture and record what survives. Block glyph advance is the specific risk.
-3. Keep 8 spark levels or drop to 5? 8 ships today and gives resolution, 5 is
-   more legible at small sizes. Recommendation: keep 8 for narrow rows, revisit
-   after the measured matrix.
+1. Separate package or same package with a second output? Same package, decided:
+   it shares the palette, the authority rules and the docs site, and shares none
+   of the px tokens. A second repo would drift.
+2. Measured column budgets. The numbers in `column` are the shipping defaults.
+   Run `ruler` in iPhone Telegram, Slack desktop, Slack iOS and Terminal with
+   the same fixture and record what survives. Block glyph advance is the
+   specific risk.
+3. Keep 8 spark levels or drop to 5? 8 ships and gives resolution, 5 is more
+   legible at small sizes. Keep 8 for narrow rows, revisit after the measured
+   matrix.
 4. Does the palette map to ANSI? If yes, each palette needs a 256-colour value
    plus a documented `--no-color` contract for logs.
 
 ## 13. Review sheet
 
-`python3 scripts/text_board_page.py /tmp/board.html`, then render it with the
-Konstrukt `html_to_png.py` helper. Every string on the sheet comes from the
-prototype, so the sheet cannot drift from the grammar it documents.
+`python3 scripts/text_board_page.py` writes `docs/text-review.html`. Every
+string on the sheet comes from the renderer, so the sheet cannot drift from
+the grammar it documents.

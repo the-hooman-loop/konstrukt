@@ -64,3 +64,15 @@ export function resolveValue(value, lookup, seen = new Set()) {
   seen.add(ref);
   return resolveValue(lookup[ref], lookup, seen);
 }
+
+/** Strip W3C DTCG `{$type, $value}` wrappers, recursively. */
+export function unwrapDtcg(node) {
+  if (Array.isArray(node)) return node.map(unwrapDtcg);
+  if (node && typeof node === 'object') {
+    if ('$value' in node) return unwrapDtcg(node.$value);
+    const out = {};
+    for (const [key, value] of Object.entries(node)) out[key] = unwrapDtcg(value);
+    return out;
+  }
+  return node;
+}
