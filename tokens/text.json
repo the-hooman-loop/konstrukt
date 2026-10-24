@@ -1,0 +1,104 @@
+{
+  "column": {
+    "phone":    { "$type": "number", "$value": 34 },
+    "chat":     { "$type": "number", "$value": 44 },
+    "terminal": { "$type": "number", "$value": 78 }
+  },
+  "cells": {
+    "spark": { "$type": "number", "$value": 8 },
+    "hbar":  { "$type": "number", "$value": 8 },
+    "range": { "$type": "number", "$value": 16 },
+    "multi": { "$type": "number", "$value": 12 }
+  },
+  "scale": {
+    "percent": {
+      "min": { "$type": "number", "$value": 0 },
+      "max": { "$type": "number", "$value": 100 }
+    }
+  },
+  "primitive": {
+    "$type": "other",
+    "$value": ["spark", "hbar", "grid", "range", "multi", "annotate", "kv", "frame", "ruler"]
+  },
+  "motion": {
+    "$type": "other",
+    "$value": ["spin", "progress"]
+  },
+  "glyph": {
+    "unicode": {
+      "spark8": { "$type": "other", "$value": "▁▂▃▄▅▆▇█" },
+      "bar4":   { "$type": "other", "$value": "░▒▓█" },
+      "hbar": {
+        "on":  { "$type": "other", "$value": "█" },
+        "off": { "$type": "other", "$value": "░" }
+      },
+      "box-light": {
+        "tl": { "$type": "other", "$value": "┌" },
+        "tr": { "$type": "other", "$value": "┐" },
+        "bl": { "$type": "other", "$value": "└" },
+        "br": { "$type": "other", "$value": "┘" },
+        "h":  { "$type": "other", "$value": "─" },
+        "v":  { "$type": "other", "$value": "│" }
+      },
+      "box-ink": {
+        "tl": { "$type": "other", "$value": "┏" },
+        "tr": { "$type": "other", "$value": "┓" },
+        "bl": { "$type": "other", "$value": "┗" },
+        "br": { "$type": "other", "$value": "┛" },
+        "h":  { "$type": "other", "$value": "━" },
+        "v":  { "$type": "other", "$value": "┃" }
+      },
+      "mark": {
+        "caret":   { "$type": "other", "$value": "▲" },
+        "rule":    { "$type": "other", "$value": "─" },
+        "dot":     { "$type": "other", "$value": "·" },
+        "dot-on":  { "$type": "other", "$value": "●" },
+        "pointer": { "$type": "other", "$value": "›" }
+      },
+      "spin": { "$type": "other", "$value": "▘▝▗▖" }
+    },
+    "ascii": {
+      "spark8": { "$type": "other", "$value": ".:-=+*#@" },
+      "bar4":   { "$type": "other", "$value": "-=#@" },
+      "hbar": {
+        "on":  { "$type": "other", "$value": "#" },
+        "off": { "$type": "other", "$value": "." }
+      },
+      "box-light": {
+        "tl": { "$type": "other", "$value": "+" },
+        "tr": { "$type": "other", "$value": "+" },
+        "bl": { "$type": "other", "$value": "+" },
+        "br": { "$type": "other", "$value": "+" },
+        "h":  { "$type": "other", "$value": "-" },
+        "v":  { "$type": "other", "$value": "|" }
+      },
+      "box-ink": {
+        "tl": { "$type": "other", "$value": "+" },
+        "tr": { "$type": "other", "$value": "+" },
+        "bl": { "$type": "other", "$value": "+" },
+        "br": { "$type": "other", "$value": "+" },
+        "h":  { "$type": "other", "$value": "=" },
+        "v":  { "$type": "other", "$value": "|" }
+      },
+      "mark": {
+        "caret":   { "$type": "other", "$value": "^" },
+        "rule":    { "$type": "other", "$value": "-" },
+        "dot":     { "$type": "other", "$value": "." },
+        "dot-on":  { "$type": "other", "$value": "o" },
+        "pointer": { "$type": "other", "$value": ">" }
+      },
+      "spin": { "$type": "other", "$value": "|/-\\" }
+    }
+  },
+  "reserved": {
+    "↑":           { "$type": "other", "$value": "high temperature / increase" },
+    "↓":           { "$type": "other", "$value": "low temperature / decrease" },
+    "▲":           { "$type": "other", "$value": "caret: points at the column annotated below" },
+    "›":           { "$type": "other", "$value": "bullet / list lead-in" },
+    "·":           { "$type": "other", "$value": "separator or idle state" },
+    "●":           { "$type": "other", "$value": "active or present" },
+    "[NORMAL]":    { "$type": "other", "$value": "status pill" },
+    "▁▂▃▄▅▆▇█":   { "$type": "other", "$value": "data ladder: height means magnitude" },
+    "▘▝▗▖":        { "$type": "other", "$value": "motion only: never carries a value" }
+  }
+}

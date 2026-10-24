@@ -2,9 +2,9 @@
 
 Konstrukt is the single source of truth for design tokens across the Hooman
 Loop ecosystem. Tokens are authored once as JSON and generated into CSS,
-Swift/SwiftUI, and a machine-readable JSON manifest. Every surface — the
-portal, the marketing site, internal tools, and native iOS — consumes the same
-generated values.
+Swift/SwiftUI, a machine-readable JSON manifest, and a text/ASCII output
+layer. Every surface — the portal, the marketing site, internal tools, native
+iOS, and character-cell channels — consumes the same generated values.
 
 ## Aesthetic
 
@@ -30,24 +30,22 @@ palette name `sqdl` renders the same as `hl`, and `[data-theme="dark"]` aliases
 ## Source of truth
 
 ```
-apps/konstrukt/
 ├── tokens/                      # AUTHOR HERE — W3C DTCG JSON
 │   ├── global.json              # fonts, spacing, radius, transition, swatches
 │   ├── semantic.json            # :root defaults (surfaces, text, accent, status…)
+│   ├── text.json                # glyph ladders, column budgets, reserved marks
 │   └── themes/                  # per-palette + per-mode overrides
-│       ├── blueprint.light.json │ ├── blueprint.dark.json
-│       ├── courage.light.json   │ ├── courage.dark.json
-│       ├── minimal.light.json   │ ├── minimal.dark.json
-│       ├── hl.light.json        │ ├── hl.dark.json
-│       └── dark.json            # default dark mode (applies to all palettes)
-├── build/                       # generator + parity gate (do not edit output)
-├── src/                         # base.css + theme.js (portable, hand-authored)
+├── build/                       # generator + parity / text gates
+├── src/                         # base.css, theme.js, text.css, text renderer + linter
 └── dist/                        # GENERATED — never hand-edit
     ├── css/konstrukt.css        # all palette × mode selector blocks
     ├── css/base.css             # portable components (.module, .badge, …)
     ├── css/theme.js             # HLTheme runtime
+    ├── css/text.css             # pre.kt embed styles
     ├── swift/Konstrukt/         # Swift package
-    └── tokens.json              # resolved manifest, one entry per theme
+    ├── tokens.json              # resolved manifest, one entry per theme, plus text
+    ├── text.json                # resolved text-layer spec
+    └── text.py                  # self-contained Python renderer
 ```
 
 Token naming maps directly to CSS custom properties: a token at path
@@ -56,10 +54,10 @@ Token naming maps directly to CSS custom properties: a token at path
 ## Build & verify
 
 ```bash
-cd apps/konstrukt
 npm install        # first time
-npm run build      # tokens/ -> dist/{css,swift,tokens.json} + docs/assets
+npm run build      # tokens/ -> dist/{css,swift,tokens.json,text.json,text.py} + docs/assets
 npm run check      # parity gate vs build/canonical-tokens.css
+npm run check:text # text-layer linter + golden board
 npm run docs       # serve docs on http://localhost:4340
 ```
 
@@ -87,7 +85,8 @@ deliberately) or a generator regression.
 | Vanilla HTML | `<link rel="stylesheet" href=".../konstrukt.css">` + `base.css` + `<script src=".../theme.js">` |
 | Astro / Vite / React | `@import '@hooman-loop/konstrukt/css';` or the synced `konstrukt.css` |
 | iOS / SwiftUI | Add the `dist/swift/Konstrukt` package; read `@Environment(\.konstruktTheme)` (see `docs/ios.html`) |
-| Tooling / AI | Read `dist/tokens.json` (resolved per theme) |
+| Tooling / AI | Read `dist/tokens.json` (resolved per theme, plus `text`) |
+| Text / CLI | Vendor `dist/text.py`, or read `dist/text.json` for raw ladders |
 
 `make sync-tokens` copies `dist/css/konstrukt.css` into each web consumer and,
 for the portal, also `base.css` and `theme.js`. The portal's

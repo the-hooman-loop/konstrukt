@@ -88,14 +88,22 @@ Text("Hi").foregroundStyle(theme.accent)</pre>
           <pre class="code">assets/tokens.json</pre>
         </div>
       </article>
+      <article class="index-card">
+        <div class="index-card-primary">
+          <span class="card-label">Text / CLI</span>
+          <h3>Text layer</h3>
+          <p class="card-detail">Character-cell charts, annotations and CLI motion. Glyphs and column budgets are tokens; the Python renderer ships from the build.</p>
+          <p class="card-detail"><a href="text.html">Text layer reference &rarr;</a></p>
+        </div>
+      </article>
     </div>
 
     <h2 class="section-label"><span class="micro-label">How it is built</span></h2>
     <section class="module">
-      <p>Tokens live as W3C DTCG JSON in <code class="inline">apps/konstrukt/tokens/</code>. A Style Dictionary build emits one CSS selector block per palette and mode, a Swift package, and the JSON manifest. A parity check confirms the generated CSS matches the portal's canonical tokens value-for-value.</p>
-      <pre class="code">cd apps/konstrukt
-npm run build     # tokens -> dist/{css,swift,tokens.json}
-npm run check     # parity gate vs canonical CSS</pre>
+      <p>Tokens live as W3C DTCG JSON in <code class="inline">tokens/</code>. A Style Dictionary build emits one CSS selector block per palette and mode, a Swift package, the JSON manifest, and the text-layer spec plus Python renderer. A parity check confirms the generated CSS matches the portal's canonical tokens value-for-value. <code class="inline">npm run check:text</code> is the text-layer gate.</p>
+      <pre class="code">npm run build       # tokens -> dist/{css,swift,tokens.json,text.json,text.py}
+npm run check       # parity gate vs canonical CSS
+npm run check:text  # linter + golden board</pre>
     </section>
 
     <footer class="site-footer">

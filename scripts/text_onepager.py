@@ -17,14 +17,15 @@ import html
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-import text_layer_prototype as K  # noqa: E402
+import text.renderer as K  # noqa: E402
 
 OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("/tmp/konstrukt-text-onepager.html")
 CHAT = K.COLUMNS["chat"]
 
 CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap');
 :root{
   --font-sans:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
   --font-display:"Space Grotesk",system-ui,sans-serif;
@@ -299,8 +300,8 @@ def build() -> str:
       terminal motion out of one token set and one linter.</p>
     </div>
     <div class="status">
-      <span class="pill solid">Proposed</span>
-      <span class="pill teal">Not in build</span>
+      <span class="pill solid">Shipped</span>
+      <span class="pill teal">v1.2.0</span>
     </div>
   </div>
   <div class="strip">
@@ -329,8 +330,8 @@ def build() -> str:
       <span class="micro">the vocabulary</span>
       <div class="chips" style="margin-top:9px">{chips}</div>
       <p class="ruleline">Nine primitives, a closed set. Anything else is composition.
-      Each renders identically from <b>text.py</b>, <b>text.js</b> and <b>Swift</b>,
-      proven by golden files in the build gate.</p>
+      The Python renderer in <b>dist/text.py</b> is generated from
+      <b>tokens/text.json</b>. The linter is the conformance gate.</p>
       <span class="micro" style="display:block;margin-top:16px">the rules that bite</span>
       <div class="chips" style="margin-top:9px">{rchips}</div>
     </div>

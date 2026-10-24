@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Build the Konstrukt · Text review sheet as a single self-contained HTML page.
 
-The page is the review artifact for the text-layer proposal: every primitive
-rendered live by the prototype module, inside real Konstrukt modules. Nothing
-in it is a screenshot or a mockup of text -- the strings come from the
-prototype, so the page cannot drift from the grammar it documents.
+Every primitive is rendered live by the shipped renderer, inside Konstrukt
+modules. Nothing in it is a screenshot or a mockup of text -- the strings
+come from the renderer, so the page cannot drift from the grammar it documents.
 
 Run:  python3 scripts/text_board_page.py [out.html]
 Then: python3 <skill>/scripts/html_to_png.py <out.html> <out.png> --measure
@@ -16,12 +15,12 @@ import html
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-import text_layer_prototype as K  # noqa: E402
-import text_lint  # noqa: E402
+import text.lint as text_lint  # noqa: E402
+import text.renderer as K  # noqa: E402
 
-OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("/tmp/konstrukt-text-board.html")
+OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parents[1] / "docs" / "text-review.html"
 CHAT = K.COLUMNS["chat"]
 
 TOKENS = """
@@ -249,15 +248,15 @@ def build() -> str:
 <body><div class="shell">
   <div class="page-header">
     <div>
-      <span class="micro">Konstrukt / proposal 01</span>
+      <span class="micro">Konstrukt / text</span>
       <h1>Text layer</h1>
       <p class="lede">The same authority structure as Konstrukt, rebuilt for a
       fixed cell: hard frames, mono metadata, one accent, status words. Charts,
       annotations and CLI motion from one token set, one linter, two encodings.</p>
     </div>
     <div class="status-col">
-      <span class="pill solid">PROPOSED</span>
-      <span class="pill teal">NOT IN BUILD</span>
+      <span class="pill solid">SHIPPED</span>
+      <span class="pill teal">IN BUILD</span>
     </div>
   </div>
   <div class="strip">
@@ -325,11 +324,11 @@ def build() -> str:
           "One deliberately broken construct per rule. The linter runs in the build "
           "gate, so a chart cannot ship with a lying bar.")}
   {module("LIVE CONSUMER", "morning brief weather microchart", demo_live(),
-      "The shipped path pre-samples to 8 points, so it passes today. The primitive "
-      "owns no column contract, so a caller that hands it raw hourly data renders "
-      "54 columns and nothing complains. Sampling moves into the primitive.")}
-  <div class="foot"><span>Konstrukt · Text · proposal</span>
-    <span>rendered from scripts/text_layer_prototype.py</span></div>
+      "The shipped primitive pre-samples to 8 points. A caller that bypasses it "
+      "and hands raw hourly data still renders 54 columns; the linter catches that "
+      "as T1. Sampling belongs in the primitive, not in each consumer.")}
+  <div class="foot"><span>Konstrukt · Text · v1.2.0</span>
+    <span>rendered from src/text/renderer.py</span></div>
 </div></body></html>"""
     return page
 

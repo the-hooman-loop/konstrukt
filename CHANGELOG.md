@@ -5,14 +5,20 @@ meaning of a rendered state. Repository activity on its own is not a release.
 
 ## Unreleased
 
-### Proposal — text layer
+## 1.2.0
 
-Not part of the contract yet. See `proposals/text-layer/scope.md`.
+The text layer is now part of the versioned contract.
 
-- 14 rules for character-cell output: charts, annotations, CLI motion.
-- 9 primitives: spark, hbar, grid, range, multi, annotate, kv, frame, ruler.
-- Two encodings behind one ladder set: unicode and ascii.
-- `scripts/text_lint.py`: an 11-check conformance gate with a self-test.
+- `tokens/text.json`: glyph ladders, column budgets, cell counts, reserved
+  marks. Two encodings (`unicode`, `ascii`) behind one ladder set.
+- `npm run build` emits `dist/text.json`, `dist/text.py`, `dist/css/text.css`,
+  and a `text` block on `dist/tokens.json`. Existing CSS, Swift and colour
+  token outputs are unchanged.
+- Nine primitives in the Python renderer: spark, hbar, grid, range, multi,
+  annotate, kv, frame, ruler.
+- `src/text/lint.py`: an 11-check conformance gate with a self-test.
+- `npm run check:text`: linter, golden board, generated-renderer identity.
+- Spec at `docs/text.md`. Review sheet at `docs/text-review.html`.
 
 ## 1.1.0
 

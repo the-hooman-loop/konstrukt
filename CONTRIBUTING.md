@@ -15,13 +15,14 @@ There are two tiers, and the difference is not maturity, it is **evidence**.
 | Canon | `tokens/` + `src/` | a versioned contract | every gate below green |
 
 A proposal exists so an unstable idea can be examined without the package
-claiming to ship it. The text layer sat in `proposals/text-layer/` and moved
-three rules in a single day of drawing posters. That is a proposal. Canon has
-stopped moving.
+claiming to ship it. A proposal can move three rules in a single day of drawing
+posters. Canon has stopped moving.
 
 **Promotion is the commit.** "Adding something to Konstrukt" means moving it
 from the left column to the right one, in one pull request, with this checklist
-complete.
+complete. The text layer is the worked example: it lived under
+`proposals/text-layer/` and shipped in 1.2.0 as `tokens/text.json` plus
+`src/text/` and a build output.
 
 ## Promotion checklist
 
@@ -34,13 +35,13 @@ before the docs, the docs before the release.
 2. **Build output.** `npm run build` emits it, so every language gets it from
    source. Consumers never read `tokens/` directly.
 3. **Gate.** A check that fails the build when the contract breaks:
-   `npm run check` for token parity, `npm run check:text` for byte-identical
-   golden renders across language outputs. **A new output without a gate is a
+   `npm run check` for token parity, `npm run check:text` for the text-layer
+   linter and a golden board render. **A new output without a gate is a
    new source of drift.**
 4. **Lint.** Rules that can be mechanised are mechanised. A documented rule with
    no check is a preference, and preferences rot.
 5. **Docs.** A page under `docs/` in the `components.html` anatomy: one section
-   per primitive, a live demo rendered from the built output, a copy-ready
+   per primitive, a demo rendered from the built output, a copy-ready
    snippet, and the rule stated as a rule. Register it in the nav.
 6. **Consumer.** One real surface uses it in the same PR, and the PR body shows
    the before and after. **A primitive is not real until a surface consumes it.**
@@ -52,8 +53,8 @@ before the docs, the docs before the release.
 
 Semver applies to the **token contract**, not to the repo's activity.
 
-- **minor**: new tokens, new primitives, new output target. Adding the text
-  layer is a minor.
+- **minor**: new tokens, new primitives, new output target. The text layer
+  landing in 1.2.0 is the example.
 - **patch**: generated-output fixes that do not change a token name or value.
 - **major**: renaming or removing a token, changing a ladder's meaning, changing
   what a status word means. Anything that makes a consumer's render wrong

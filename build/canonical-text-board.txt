@@ -1,0 +1,111 @@
+  KONSTRUK · TEXT  unicode  44 cols
+
+  01 SPARK
+   ▂▁▃▅▆█▇▅ temp 56→72°    ▁▁▂▂▄▆▅▃ rain
+                                ▲
+                 peak 78% 17:00
+
+  02 HBAR  fixed 0-100
+  Deep work        █████░░░    62%
+  Client delivery  ███░░░░░    38%
+  Admin            █░░░░░░░     9%
+
+  03 GRID  habit matrix  4-step ladder
+             M T W T F S S
+  WK 40      ▒   ▓   ░ █
+  WK 41      ▓   ░   ▒
+  WK 42      █   ▒   ▓
+
+  04 FRAME
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ SERVICE                     STATUS WATCH ┃
+┃━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┃
+┃ ● uptime        99.98%                   ┃
+┃ · latency       42 ms                    ┃
+┃ · next run      Nov 12                   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  05 CLI  animation resolves
+  ▘ syncing 3 sources
+  ▘▝▗▖  four frames, then resolved
+
+┌──────────────────────────────────────────┐
+│ SYNC                           DONE 2.1s │
+│──────────────────────────────────────────│
+│ calendar   ████████  ok                  │
+│ weather    ██████░░  partial             │
+│ gmail      ████████  ok                  │
+└──────────────────────────────────────────┘
+  06 RANGE  sleep window, 7 nights
+  MON  ····▒▒▒▲▒▒▒·····  7.4h
+  TUE  ···▒▲▒▒▒▒▒······  6.1h
+
+  07 MULTI  deep work, shared scale 0-14
+  WK 40  ▂▅▄▇▃▁▁
+  WK 41  ▄▅▆▄▅▂▁
+  WK 42  ▃▃▅█▄▁▁
+
+  08 KV
+  next appt    ····················· Nov 12
+  meds         ··················· 3 active
+  records      ··················· 11 of 12
+
+  09 RULER  paste into a new channel once
+  0123456789012345678901234567890123456789
+  |····|····|····|····|····|····|····|····
+
+  KONSTRUK · TEXT  ascii  44 cols
+
+  01 SPARK
+   :.-+*@#+ temp 56→72°    ..::=*+- rain
+                                ^
+                 peak 78% 17:00
+
+  02 HBAR  fixed 0-100
+  Deep work        #####...    62%
+  Client delivery  ###.....    38%
+  Admin            #.......     9%
+
+  03 GRID  habit matrix  4-step ladder
+             M T W T F S S
+  WK 40      =   #   - @
+  WK 41      #   -   =
+  WK 42      @   =   #
+
+  04 FRAME
++==========================================+
+| SERVICE                     STATUS WATCH |
+|==========================================|
+| o uptime        99.98%                   |
+| . latency       42 ms                    |
+| . next run      Nov 12                   |
++==========================================+
+
+  05 CLI  animation resolves
+  | syncing 3 sources
+  |/-\  four frames, then resolved
+
++------------------------------------------+
+| SYNC                           DONE 2.1s |
+|------------------------------------------|
+| calendar   ########  ok                  |
+| weather    ######..  partial             |
+| gmail      ########  ok                  |
++------------------------------------------+
+  06 RANGE  sleep window, 7 nights
+  MON  ....▒▒▒^▒▒▒.....  7.4h
+  TUE  ...▒^▒▒▒▒▒......  6.1h
+
+  07 MULTI  deep work, shared scale 0-14
+  WK 40  :+=#-..
+  WK 41  =+*=+:.
+  WK 42  --+@=..
+
+  08 KV
+  next appt    ..................... Nov 12
+  meds         ................... 3 active
+  records      ................... 11 of 12
+
+  09 RULER  paste into a new channel once
+  0123456789012345678901234567890123456789
+  |....|....|....|....|....|....|....|....
