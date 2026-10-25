@@ -19,6 +19,13 @@ jobs:
       - run: npm run build
       # Fails on drift from the committed snapshot, or any pair below WCAG AA.
       - run: npm run check
+      # Generated llms-full.txt must match the contract docs; llms.txt links must resolve.
+      - run: npm run check:llms
+      # Agent entry points are copied into docs/ for the local docs server.
+      - name: docs site serves llms.txt
+        run: |
+          test -s docs/llms.txt
+          test -s docs/llms-full.txt
       # Text-layer spec and renderer must land in dist/ with the rest of the contract.
       - name: text-layer outputs exist
         run: |

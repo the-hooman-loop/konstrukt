@@ -27,7 +27,8 @@ bash scripts/deploy-docs.sh
 ```
 
 The script rebuilds tokens, runs the parity check, copies the generated assets
-into `docs/assets/`, and publishes `docs/` with `wrangler pages deploy`.
+into `docs/assets/`, copies `llms.txt` and `llms-full.txt` to the docs root, and
+publishes `docs/` with `wrangler pages deploy`.
 
 ## Notes
 

@@ -6,7 +6,7 @@
  * reproduces the canonical palette x mode cascade. Swift and JSON outputs are
  * derived from the same token files so every surface stays in lock-step.
  */
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, cpSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, cpSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import StyleDictionary from 'style-dictionary';
@@ -437,6 +437,13 @@ function copyDocsAssets() {
   cpSync(join(distCss, 'text.css'), join(docsAssets, 'text.css'));
   cpSync(join(dist, 'tokens.json'), join(docsAssets, 'tokens.json'));
   cpSync(join(dist, 'text.json'), join(docsAssets, 'text.json'));
+
+  // Copy agent entry points into docs/ so `npm run docs` can serve them.
+  const docsRoot = resolve(projectRoot, 'docs');
+  for (const name of ['llms.txt', 'llms-full.txt']) {
+    const src = resolve(projectRoot, name);
+    if (existsSync(src)) cpSync(src, join(docsRoot, name));
+  }
 }
 
 async function main() {
@@ -457,6 +464,7 @@ async function main() {
   console.log(`  dist/text.json           (text-layer spec)`);
   console.log(`  dist/text.py             (text-layer renderer)`);
   console.log(`  dist/swift/Konstrukt/    (Swift package)`);
+  console.log(`  docs/llms.txt            (copied for the docs site)`);
 }
 
 main().catch((err) => {
