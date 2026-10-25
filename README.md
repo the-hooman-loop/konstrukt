@@ -151,8 +151,8 @@ example data; the phones are mockups, not device captures.
 - Deploying the docs: [`scripts/README-deploy.md`](scripts/README-deploy.md).
 - Agent entry points: [`llms.txt`](llms.txt) (curated index),
   [`llms-full.txt`](llms-full.txt) (generated full docs),
-  [`AGENTS.md`](AGENTS.md) (working in this repo). After a docs deploy they are
-  also at [design.thehoomanloop.com/llms.txt](https://design.thehoomanloop.com/llms.txt).
+  [`AGENTS.md`](AGENTS.md) (working in this repo). The live public docs page is
+  [thehoomanloop.com/konstrukt](https://thehoomanloop.com/konstrukt/).
 
 ## Editing tokens
 

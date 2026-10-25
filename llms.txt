@@ -2,7 +2,7 @@
 
 > The Hooman Loop design system (v2.0.0). Swiss / Bauhaus: `--radius: 0px`, `--shadow: none`, one palette (`atelier`), light and dark via `data-mode` on `<html>`. Tokens are authored as W3C DTCG JSON and generated into CSS, Swift/SwiftUI, `dist/tokens.json`, and a text/ASCII layer.
 
-Konstrukt is MIT-licensed. `data-palette` is accepted and ignored; 1.x palette names (`hl`, `sqdl`, `courage`, `minimal`, `blueprint`) are aliases that render as atelier until 3.0. Never hard-code hex values — use tokens. Author in `tokens/`; never edit `dist/`. The full contract is DESIGN.md. After `npm run build`, generated outputs live under `dist/` (gitignored): `tokens.json` (both modes plus a `text` block), `css/konstrukt.css`, `css/base.css`, `css/theme.js`, `css/text.css`, `swift/Konstrukt/`, `text.json`, and `text.py`.
+Konstrukt is MIT-licensed. `data-palette` is accepted and ignored; 1.x palette names (`hl`, `sqdl`, `courage`, `minimal`, `blueprint`) are aliases that render as atelier until 3.0. Never hard-code hex values — use tokens. Author in `tokens/`; never edit `dist/`. The full contract is DESIGN.md. The live public docs page is https://thehoomanloop.com/konstrukt/ (built from a different repo; it may lag this one). After `npm run build`, generated outputs live under `dist/` (gitignored): `tokens.json` (both modes plus a `text` block), `css/konstrukt.css`, `css/base.css`, `css/theme.js`, `css/text.css`, `swift/Konstrukt/`, `text.json`, and `text.py`.
 
 ## Contract
 
@@ -58,5 +58,5 @@ npm run docs        # serve docs/ on http://localhost:4340
 - [docs/ios.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/ios.html): SwiftUI integration
 - [docs/text.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/text.html): Text-layer reference page
 - [docs/text-review.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/text-review.html): Text-layer review sheet
-- [scripts/README-deploy.md](https://github.com/the-hooman-loop/konstrukt/blob/main/scripts/README-deploy.md): How `docs/` deploys to design.thehoomanloop.com
+- [scripts/README-deploy.md](https://github.com/the-hooman-loop/konstrukt/blob/main/scripts/README-deploy.md): Optional Cloudflare Pages deploy of `docs/`
 - [proposals/README.md](https://github.com/the-hooman-loop/konstrukt/blob/main/proposals/README.md): Unstable work; promises nothing

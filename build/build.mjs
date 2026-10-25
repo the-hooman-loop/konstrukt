@@ -438,7 +438,7 @@ function copyDocsAssets() {
   cpSync(join(dist, 'tokens.json'), join(docsAssets, 'tokens.json'));
   cpSync(join(dist, 'text.json'), join(docsAssets, 'text.json'));
 
-  // Serve agent entry points at the docs-site root (design.thehoomanloop.com/llms.txt).
+  // Copy agent entry points into docs/ so `npm run docs` can serve them.
   const docsRoot = resolve(projectRoot, 'docs');
   for (const name of ['llms.txt', 'llms-full.txt']) {
     const src = resolve(projectRoot, name);

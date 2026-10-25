@@ -12,8 +12,8 @@ meaning of a rendered state. Repository activity on its own is not a release.
   the full file; `npm run check:llms` (run in CI) fails if it drifts or if an
   `llms.txt` link points at a missing file.
 - `AGENTS.md` with working rules for coding agents in or consuming this repo.
-- The docs build copies `llms.txt` and `llms-full.txt` to the `docs/` root so
-  they are served at design.thehoomanloop.com after deploy.
+- The docs build copies `llms.txt` and `llms-full.txt` to the `docs/` root
+  (harmless for `npm run docs` and an optional Pages deploy).
 
 ## 2.0.0
 

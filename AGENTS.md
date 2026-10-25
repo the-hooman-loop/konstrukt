@@ -34,7 +34,7 @@ palette, `atelier`, in light and dark.
 | `src/` | `base.css`, `theme.js`, `text.css`, text renderer and linter |
 | `build/` | Generator plus parity, contrast, and llms-full gates |
 | `dist/` | Generated. Never hand-edit. Gitignored. |
-| `docs/` | Static docs site, published to design.thehoomanloop.com |
+| `docs/` | In-repo static docs (`npm run docs`). Public page: https://thehoomanloop.com/konstrukt/ |
 | `proposals/` | Unstable. No version, no gate, no compatibility promise. |
 
 Consumers never read `tokens/` directly. They consume `dist/`.
@@ -67,8 +67,9 @@ pull request. See [CONTRIBUTING.md](CONTRIBUTING.md).
 | Tooling / AI | `dist/tokens.json` — `themes["atelier.light"]`, `themes["atelier.dark"]`, plus `text` |
 | Text / CLI | Vendor `dist/text.py`, or read `dist/text.json` for raw ladders |
 
-After a docs deploy, the resolved manifest is also at
-`https://design.thehoomanloop.com/assets/tokens.json`.
+The live public docs page is https://thehoomanloop.com/konstrukt/. It is built
+from a different repo and may lag this one. After `npm run build`, read
+`dist/tokens.json` locally.
 
 ## When to use the text layer
 
@@ -81,6 +82,6 @@ pixel UI. Nine primitives (`spark`, `hbar`, `grid`, `range`, `multi`,
 
 ## Agent entry points
 
-- [llms.txt](llms.txt) — curated index (also served at `/llms.txt` on the docs site)
+- [llms.txt](llms.txt) — curated index (the build also copies it into `docs/`)
 - [llms-full.txt](llms-full.txt) — generated full docs
 - [DESIGN.md](DESIGN.md) — the contract
