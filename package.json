@@ -16,10 +16,12 @@
   "private": true,
   "scripts": {
     "build": "node build/build.mjs",
+    "build:llms": "node build/llms-full.mjs",
     "check": "npm run check:parity && npm run check:contrast",
     "check:parity": "node build/check-parity.mjs",
     "check:contrast": "node build/check-contrast.mjs",
     "check:text": "python3 src/text/check.py",
+    "check:llms": "node build/llms-full.mjs --check",
     "snapshot": "node build/build.mjs && cp dist/css/konstrukt.css build/canonical-tokens.css",
     "docs": "python3 -m http.server 4340 -d docs"
   },

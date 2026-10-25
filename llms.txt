@@ -1,0 +1,62 @@
+# Konstrukt
+
+> The Hooman Loop design system (v2.0.0). Swiss / Bauhaus: `--radius: 0px`, `--shadow: none`, one palette (`atelier`), light and dark via `data-mode` on `<html>`. Tokens are authored as W3C DTCG JSON and generated into CSS, Swift/SwiftUI, `dist/tokens.json`, and a text/ASCII layer.
+
+Konstrukt is MIT-licensed. `data-palette` is accepted and ignored; 1.x palette names (`hl`, `sqdl`, `courage`, `minimal`, `blueprint`) are aliases that render as atelier until 3.0. Never hard-code hex values — use tokens. Author in `tokens/`; never edit `dist/`. The full contract is DESIGN.md. After `npm run build`, generated outputs live under `dist/` (gitignored): `tokens.json` (both modes plus a `text` block), `css/konstrukt.css`, `css/base.css`, `css/theme.js`, `css/text.css`, `swift/Konstrukt/`, `text.json`, and `text.py`.
+
+## Contract
+
+- [DESIGN.md](https://github.com/the-hooman-loop/konstrukt/blob/main/DESIGN.md): Token model, gates, consumption, and adoption status
+- [README](https://github.com/the-hooman-loop/konstrukt/blob/main/README.md): Overview, quick start, and what the build produces
+- [AGENTS.md](https://github.com/the-hooman-loop/konstrukt/blob/main/AGENTS.md): Instructions for coding agents working in or with this repo
+- [docs/text.md](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/text.md): Text/ASCII layer spec — 9 primitives, 14 rules, 11 lint checks
+- [CONTRIBUTING.md](https://github.com/the-hooman-loop/konstrukt/blob/main/CONTRIBUTING.md): Promotion checklist and version policy
+- [llms-full.txt](https://github.com/the-hooman-loop/konstrukt/blob/main/llms-full.txt): Generated concatenation of the contract docs above
+
+## Tokens
+
+A token path becomes a CSS custom property: `status.draft-bg` → `--status-draft-bg`. Consumers never read `tokens/` directly; they use the generated `dist/` outputs.
+
+- [tokens/primitives.json](https://github.com/the-hooman-loop/konstrukt/blob/main/tokens/primitives.json): Raw color ramps, referenced as `{color.teal.700}`, never emitted
+- [tokens/global.json](https://github.com/the-hooman-loop/konstrukt/blob/main/tokens/global.json): Fonts, type scale and roles, spacing, strokes, radius
+- [tokens/semantic.json](https://github.com/the-hooman-loop/konstrukt/blob/main/tokens/semantic.json): Light-mode semantic roles (`:root` defaults)
+- [tokens/themes/dark.json](https://github.com/the-hooman-loop/konstrukt/blob/main/tokens/themes/dark.json): Dark-mode overrides (only roles that differ)
+- [tokens/deprecated.json](https://github.com/the-hooman-loop/konstrukt/blob/main/tokens/deprecated.json): 1.x names as `var()` aliases, removed in 3.0
+- [tokens/text.json](https://github.com/the-hooman-loop/konstrukt/blob/main/tokens/text.json): Glyph ladders, column budgets, reserved marks
+
+## Build
+
+```
+npm run build       # tokens/ → dist/ + docs/assets; copies llms.txt into docs/
+npm run check       # parity vs the committed snapshot + WCAG AA contrast (80 pairs)
+npm run snapshot    # accept an intended token change
+npm run check:text  # text-layer linter + golden board
+npm run check:llms  # llms-full.txt freshness + llms.txt link check
+npm run docs        # serve docs/ on http://localhost:4340
+```
+
+- [build/build.mjs](https://github.com/the-hooman-loop/konstrukt/blob/main/build/build.mjs): Generator — CSS, Swift, tokens.json, text layer, docs assets
+- [build/llms-full.mjs](https://github.com/the-hooman-loop/konstrukt/blob/main/build/llms-full.mjs): Regenerates `llms-full.txt` from the contract docs
+- [build/check-parity.mjs](https://github.com/the-hooman-loop/konstrukt/blob/main/build/check-parity.mjs): Generated CSS vs `build/canonical-tokens.css`
+- [build/check-contrast.mjs](https://github.com/the-hooman-loop/konstrukt/blob/main/build/check-contrast.mjs): WCAG 2.2 AA pairs in both modes
+- [build/canonical-tokens.css](https://github.com/the-hooman-loop/konstrukt/blob/main/build/canonical-tokens.css): Committed CSS snapshot
+- [package.json](https://github.com/the-hooman-loop/konstrukt/blob/main/package.json): Scripts and package exports
+- [.github/workflows/verify.yml](https://github.com/the-hooman-loop/konstrukt/blob/main/.github/workflows/verify.yml): CI — build, check, check:text, check:llms
+
+## Optional
+
+- [CHANGELOG.md](https://github.com/the-hooman-loop/konstrukt/blob/main/CHANGELOG.md): Release history; semver applies to the token contract
+- [LICENSE](https://github.com/the-hooman-loop/konstrukt/blob/main/LICENSE): MIT for code, tokens, and docs; the Konstrukt name is not licensed
+- [src/base.css](https://github.com/the-hooman-loop/konstrukt/blob/main/src/base.css): Portable components (copied to `dist/css/base.css`)
+- [src/theme.js](https://github.com/the-hooman-loop/konstrukt/blob/main/src/theme.js): `HLTheme` runtime — sets `data-mode` on `<html>`
+- [src/text/renderer.py](https://github.com/the-hooman-loop/konstrukt/blob/main/src/text/renderer.py): Text-layer reference renderer (9 primitives)
+- [src/text/lint.py](https://github.com/the-hooman-loop/konstrukt/blob/main/src/text/lint.py): Text-layer conformance linter (11 checks)
+- [docs/index.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/index.html): Docs site overview
+- [docs/tokens.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/tokens.html): Live token explorer
+- [docs/components.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/components.html): Component reference
+- [docs/typography.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/typography.html): Type roles
+- [docs/ios.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/ios.html): SwiftUI integration
+- [docs/text.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/text.html): Text-layer reference page
+- [docs/text-review.html](https://github.com/the-hooman-loop/konstrukt/blob/main/docs/text-review.html): Text-layer review sheet
+- [scripts/README-deploy.md](https://github.com/the-hooman-loop/konstrukt/blob/main/scripts/README-deploy.md): How `docs/` deploys to design.thehoomanloop.com
+- [proposals/README.md](https://github.com/the-hooman-loop/konstrukt/blob/main/proposals/README.md): Unstable work; promises nothing

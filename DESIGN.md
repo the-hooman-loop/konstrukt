@@ -81,6 +81,8 @@ npm run build      # tokens/ -> dist/{css,swift,tokens.json,text.json,text.py} +
 npm run check      # parity vs build/canonical-tokens.css + WCAG AA contrast
 npm run snapshot   # rebuild and accept the output as the new snapshot
 npm run check:text # text-layer linter + golden board
+npm run check:llms # llms-full.txt freshness + llms.txt link check
+npm run build:llms # regenerate llms-full.txt from the contract docs
 npm run docs       # serve docs on http://localhost:4340
 ```
 
