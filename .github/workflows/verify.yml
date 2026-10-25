@@ -7,7 +7,7 @@ on:
 
 jobs:
   tokens:
-    name: build + parity
+    name: build + parity + contrast
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +17,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      # Fails the build when generated CSS drifts from the canonical snapshot.
+      # Fails on drift from the committed snapshot, or any pair below WCAG AA.
       - run: npm run check
       # Text-layer spec and renderer must land in dist/ with the rest of the contract.
       - name: text-layer outputs exist

@@ -34,15 +34,15 @@ targets: [
 
     <h2 class="section-label"><span class="micro-label">2 · Resolve a theme</span></h2>
     <section class="module">
-      <p>A <code class="inline">KonstruktTheme</code> is the intersection of a palette and a mode — the same two axes as the web.</p>
+      <p>A <code class="inline">KonstruktTheme</code> is resolved from a mode. The palette parameter remains for source compatibility; atelier is the only palette, and the 1.x cases are deprecated aliases for it.</p>
       <pre class="code">import Konstrukt
 
-let theme = KonstruktTheme.theme(palette: .hl, mode: .dark)
+let theme = KonstruktTheme.theme(mode: .dark)
 // theme.accent, theme.bg, theme.surface, theme.text, ...</pre>
       <table class="data-table">
         <thead><tr><th>Type</th><th>Cases</th></tr></thead>
         <tbody>
-          <tr><td><code class="inline">KonstruktPalette</code></td><td>.atelier · .courage · .minimal · .hl · .blueprint</td></tr>
+          <tr><td><code class="inline">KonstruktPalette</code></td><td>.atelier <span class="meta">(.hl · .courage · .minimal · .blueprint deprecated, resolve to .atelier)</span></td></tr>
           <tr><td><code class="inline">KonstruktMode</code></td><td>.light · .dark</td></tr>
         </tbody>
       </table>
@@ -58,7 +58,7 @@ struct RootView: View {
     @Environment(\.colorScheme) private var scheme
     var body: some View {
         ContentView()
-            .konstruktTheme(palette: .hl, mode: scheme == .dark ? .dark : .light)
+            .konstruktTheme(mode: scheme == .dark ? .dark : .light)
     }
 }
 
@@ -67,7 +67,7 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: KonstruktSpacing.sp4) {
             Text("The Hooman Loop")
-                .font(.custom(KonstruktFont.display, size: 28))
+                .konstruktTextStyle(.heading)
                 .foregroundStyle(theme.text)
             Text("Build once. Theme everywhere.")
                 .foregroundStyle(theme.textMuted)
@@ -78,11 +78,27 @@ struct ContentView: View {
 }</pre>
     </section>
 
-    <h2 class="section-label"><span class="micro-label">4 · Spacing, radius, fonts</span></h2>
+    <h2 class="section-label"><span class="micro-label">4 · Typography roles</span></h2>
+    <section class="module">
+      <p>The same roles as the web, generated from <code class="inline">tokens/global.json</code>. Sizes are in points; tracking is stored in em and converted for you.</p>
+      <pre class="code">Text("Reference").konstruktTextStyle(.label)   // iOS 16+
+Text("Konstrukt").konstruktTextStyle(.display)
+
+let s = KonstruktTextStyle.meta
+s.font           // Font.custom("Inter", size: 13).weight(.regular)
+s.trackingPoints // tracking × size
+s.lineSpacing    // (lineHeight − 1) × size</pre>
+      <p class="meta">Roles: .display · .heading · .subheading · .label · .badge · .body · .meta · .mono</p>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">5 · Spacing, strokes, radius, fonts</span></h2>
     <section class="module">
       <pre class="code">KonstruktSpacing.sp1   // 4
 KonstruktSpacing.sp4   // 16
 KonstruktSpacing.sp16  // 64
+KonstruktStroke.hairline // 1
+KonstruktStroke.rule     // 2  (the ink rule)
+KonstruktStroke.rail     // 4  (accent rail)
 KonstruktRadius.base   // 0  (square corners)
 
 KonstruktFont.display  // "Space Grotesk"
@@ -93,8 +109,8 @@ KonstruktFont.mono     // "SF Mono"</pre>
 
     <h2 class="section-label"><span class="micro-label">Regenerating</span></h2>
     <section class="module">
-      <p>The Swift sources are generated — never hand-edit them. Change a value in <code class="inline">apps/konstrukt/tokens/</code> and rebuild; the CSS, Swift, and JSON outputs update together.</p>
-      <pre class="code">cd apps/konstrukt && npm run build</pre>
+      <p>The Swift sources are generated — never hand-edit them. Change a value in <code class="inline">tokens/</code> and rebuild; the CSS, Swift, and JSON outputs update together.</p>
+      <pre class="code">npm run build</pre>
     </section>
 
     <footer class="site-footer">

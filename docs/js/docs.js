@@ -26,26 +26,13 @@
       <a class="brand" href="index.html">Konstrukt</a>
       <nav><ul class="docs-nav">${links}</ul></nav>
       <div class="docs-controls">
-        <select id="palette-select" aria-label="Palette">
-          <option value="atelier">Atelier</option>
-          <option value="courage">Courage</option>
-          <option value="minimal">Minimal</option>
-          <option value="hl">The Hooman Loop</option>
-          <option value="blueprint">Blueprint</option>
-        </select>
         <button id="mode-toggle" aria-label="Toggle light/dark">Mode</button>
       </div>`;
     document.body.prepend(bar);
 
-    const sel = bar.querySelector('#palette-select');
     const toggle = bar.querySelector('#mode-toggle');
     const theme = window.HLTheme;
     if (theme) {
-      sel.value = theme.currentPalette();
-      sel.addEventListener('change', () => {
-        theme.setPalette(sel.value);
-        document.dispatchEvent(new CustomEvent('konstrukt:themechange'));
-      });
       toggle.addEventListener('click', () => {
         theme.toggleMode();
         document.dispatchEvent(new CustomEvent('konstrukt:themechange'));
@@ -75,7 +62,7 @@
     const draw = () => {
       const tokens = manifest.themes[activeThemeKey()] || manifest.themes['atelier.light'];
       el.innerHTML = Object.entries(tokens)
-        .filter(([name, t]) => t.type === 'color' && filter(name))
+        .filter(([name, t]) => t.type === 'color' && !t.deprecated && filter(name))
         .map(
           ([name, t]) => `
             <div class="swatch">
@@ -108,7 +95,36 @@
       .join('');
   }
 
-  window.KonstruktDocs = { renderSwatches, renderScale };
+  /** One specimen per typography role, rendered from the CSS role tokens. */
+  async function renderTypeRoles(containerId) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const manifest = await loadManifest();
+    const sample = {
+      display: 'Display heading',
+      heading: 'Section heading',
+      subheading: 'Subsection heading',
+      label: 'Micro label',
+      badge: 'Badge',
+      body: 'Body copy carries long-form notes, tables and documentation without strain.',
+      meta: 'Meta · 24 Oct 2026 · 3 min read',
+      mono: 'const accent = "#057079";',
+    };
+    const roles = Object.entries(manifest.global).filter(([, t]) => t.type === 'typography');
+    el.innerHTML = roles
+      .map(([name, { value: v }]) => {
+        const role = name.slice(5);
+        const family = v.fontFamily.split(',')[0].replace(/"/g, '');
+        return `
+          <div class="specimen">
+            <p style="font:var(--${name});letter-spacing:var(--${name}-tracking);text-transform:var(--${name}-transform)">${sample[role] || role}</p>
+            <p class="spec-meta">--${name} · ${family} ${v.fontWeight} · ${v.fontSize} / ${v.lineHeight} · tracking ${v.letterSpacing}${v.textTransform === 'uppercase' ? ' · uppercase' : ''}</p>
+          </div>`;
+      })
+      .join('');
+  }
+
+  window.KonstruktDocs = { renderSwatches, renderScale, renderTypeRoles };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderTopbar);
   } else {

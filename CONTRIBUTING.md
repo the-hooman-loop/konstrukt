@@ -35,7 +35,7 @@ before the docs, the docs before the release.
 2. **Build output.** `npm run build` emits it, so every language gets it from
    source. Consumers never read `tokens/` directly.
 3. **Gate.** A check that fails the build when the contract breaks:
-   `npm run check` for token parity, `npm run check:text` for the text-layer
+   `npm run check` for token parity and WCAG contrast, `npm run check:text` for the text-layer
    linter and a golden board render. **A new output without a gate is a
    new source of drift.**
 4. **Lint.** Rules that can be mechanised are mechanised. A documented rule with

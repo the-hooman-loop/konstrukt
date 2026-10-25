@@ -1,0 +1,67 @@
+{
+  "$description": "Raw color ramps. Never emitted as CSS custom properties: semantic and theme tokens reference them as {color.<hue>.<step>} and the build resolves the reference to a literal.",
+  "color": {
+    "neutral": {
+      "0":    { "$type": "color", "$value": "#FFFFFF" },
+      "50":   { "$type": "color", "$value": "#F5F5F0" },
+      "100":  { "$type": "color", "$value": "#EBEBEB" },
+      "125":  { "$type": "color", "$value": "#ECEAE4" },
+      "150":  { "$type": "color", "$value": "#E6E6E0" },
+      "200":  { "$type": "color", "$value": "#D0D0C8" },
+      "400":  { "$type": "color", "$value": "#94948C" },
+      "500":  { "$type": "color", "$value": "#74746E" },
+      "600":  { "$type": "color", "$value": "#6A6A6A" },
+      "650":  { "$type": "color", "$value": "#5C5C58" },
+      "800":  { "$type": "color", "$value": "#2E2E2C" },
+      "850":  { "$type": "color", "$value": "#26262A" },
+      "875":  { "$type": "color", "$value": "#1E1E22" },
+      "900":  { "$type": "color", "$value": "#1A1A1A" },
+      "950":  { "$type": "color", "$value": "#121212" },
+      "1000": { "$type": "color", "$value": "#0A0A0A" }
+    },
+    "teal": {
+      "50":  { "$type": "color", "$value": "#E8F6F7" },
+      "100": { "$type": "color", "$value": "#C8EAED" },
+      "400": { "$type": "color", "$value": "#2ABFCC" },
+      "700": { "$type": "color", "$value": "#057079" },
+      "900": { "$type": "color", "$value": "#0D3D40" },
+      "950": { "$type": "color", "$value": "#082A2D" }
+    },
+    "green": {
+      "100": { "$type": "color", "$value": "#DDEBD9" },
+      "300": { "$type": "color", "$value": "#8FCB97" },
+      "700": { "$type": "color", "$value": "#2F6B3A" },
+      "900": { "$type": "color", "$value": "#17301B" }
+    },
+    "ochre": {
+      "100": { "$type": "color", "$value": "#F5E7C4" },
+      "300": { "$type": "color", "$value": "#E9C46A" },
+      "700": { "$type": "color", "$value": "#7A4E00" },
+      "900": { "$type": "color", "$value": "#3A2A08" }
+    },
+    "yellow": {
+      "200": { "$type": "color", "$value": "#FEF08A" },
+      "300": { "$type": "color", "$value": "#FACC15" },
+      "800": { "$type": "color", "$value": "#6B4A00" },
+      "950": { "$type": "color", "$value": "#422006" }
+    },
+    "blue": {
+      "100": { "$type": "color", "$value": "#DCE5F4" },
+      "300": { "$type": "color", "$value": "#9DB7EA" },
+      "700": { "$type": "color", "$value": "#1F4FA8" },
+      "900": { "$type": "color", "$value": "#182A4D" }
+    },
+    "red": {
+      "100": { "$type": "color", "$value": "#F6DEDA" },
+      "300": { "$type": "color", "$value": "#F09A8F" },
+      "700": { "$type": "color", "$value": "#B3261E" },
+      "900": { "$type": "color", "$value": "#45120E" }
+    },
+    "violet": {
+      "100": { "$type": "color", "$value": "#E6E0F2" },
+      "300": { "$type": "color", "$value": "#C1B0EA" },
+      "700": { "$type": "color", "$value": "#5B3F9E" },
+      "900": { "$type": "color", "$value": "#2A1F48" }
+    }
+  }
+}

@@ -19,7 +19,7 @@
       <p class="tagline">The single source of truth for design tokens across all The Hooman Loop surfaces — web apps, marketing sites, and native iOS. Authored once as JSON, generated into CSS, Swift, and a machine-readable manifest.</p>
       <div class="meta-row">
         <span><strong>Style</strong> Bauhaus / Swiss International</span>
-        <span><strong>Palettes</strong> 5</span>
+        <span><strong>Palette</strong> Atelier</span>
         <span><strong>Modes</strong> Light + Dark</span>
       </div>
     </header>
@@ -31,21 +31,22 @@
           <tr><td><strong>Flat</strong></td><td>No drop shadows. Elevation is communicated with borders and weight, never blur. <code class="inline">--shadow: none</code>.</td></tr>
           <tr><td><strong>Square</strong></td><td>Corners are sharp by default. <code class="inline">--radius: 0px</code>.</td></tr>
           <tr><td><strong>Typographic</strong></td><td>Space Grotesk for display, Inter for body, SF Mono for code. Hierarchy carries the layout.</td></tr>
-          <tr><td><strong>Restrained color</strong></td><td>An off-white canvas, near-black ink, one teal accent. Status and segment colors are reserved for meaning.</td></tr>
+          <tr><td><strong>Restrained color</strong></td><td>An off-white canvas, near-black ink, one teal accent. Feedback, status and category colors are reserved for meaning.</td></tr>
           <tr><td><strong>Grid</strong></td><td>A strict 4px spacing scale, <code class="inline">--sp-1</code> through <code class="inline">--sp-16</code>.</td></tr>
+          <tr><td><strong>Legible</strong></td><td>Every text and control pair meets WCAG AA in both modes. <code class="inline">npm run check</code> fails the build when one doesn't.</td></tr>
         </tbody>
       </table>
     </section>
 
-    <h2 class="section-label"><span class="micro-label">Two axes</span></h2>
+    <h2 class="section-label"><span class="micro-label">One palette, two modes</span></h2>
     <section class="module">
-      <p class="lede">Every theme is the intersection of a <strong>palette</strong> and a <strong>mode</strong>, set as attributes on <code class="inline">&lt;html&gt;</code>. Use the controls in the header to preview any combination across these docs.</p>
-      <pre class="code">&lt;html data-palette="hl" data-mode="dark"&gt;</pre>
+      <p class="lede">Konstrukt ships a single palette, <strong>atelier</strong>, in light and dark. The mode is an attribute on <code class="inline">&lt;html&gt;</code>; use the control in the header to preview it across these docs.</p>
+      <pre class="code">&lt;html data-mode="dark"&gt;</pre>
       <table class="data-table">
         <thead><tr><th>Attribute</th><th>Values</th></tr></thead>
         <tbody>
-          <tr><td><code class="inline">data-palette</code></td><td>atelier · courage · minimal · hl · blueprint <span class="meta">(legacy <code class="inline">sqdl</code> &rarr; <code class="inline">hl</code>)</span></td></tr>
           <tr><td><code class="inline">data-mode</code></td><td>light · dark <span class="meta">(legacy <code class="inline">[data-theme="dark"]</code>)</span></td></tr>
+          <tr><td><code class="inline">data-palette</code></td><td>accepted, ignored <span class="meta">(1.x names hl · sqdl · courage · minimal · blueprint render as atelier)</span></td></tr>
         </tbody>
       </table>
     </section>
@@ -100,9 +101,10 @@ Text("Hi").foregroundStyle(theme.accent)</pre>
 
     <h2 class="section-label"><span class="micro-label">How it is built</span></h2>
     <section class="module">
-      <p>Tokens live as W3C DTCG JSON in <code class="inline">tokens/</code>. A Style Dictionary build emits one CSS selector block per palette and mode, a Swift package, the JSON manifest, and the text-layer spec plus Python renderer. A parity check confirms the generated CSS matches the portal's canonical tokens value-for-value. <code class="inline">npm run check:text</code> is the text-layer gate.</p>
+      <p>Tokens live as W3C DTCG JSON in <code class="inline">tokens/</code>. Primitive color ramps are referenced as <code class="inline">{color.teal.700}</code> and resolved at build time; semantic roles link to each other with <code class="inline">var()</code>. A Style Dictionary build emits a light and a dark CSS block, a Swift package, the JSON manifest, and the text-layer spec plus Python renderer. <code class="inline">npm run check</code> runs the parity gate against the committed snapshot and the WCAG contrast gate. <code class="inline">npm run check:text</code> is the text-layer gate.</p>
       <pre class="code">npm run build       # tokens -> dist/{css,swift,tokens.json,text.json,text.py}
-npm run check       # parity gate vs canonical CSS
+npm run check       # parity vs snapshot + WCAG AA contrast
+npm run snapshot    # accept an intended token change
 npm run check:text  # linter + golden board</pre>
     </section>
 

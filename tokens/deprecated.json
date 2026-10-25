@@ -1,0 +1,53 @@
+{
+  "$description": "Deprecated names kept as var() aliases so 1.x consumers keep rendering. Each one is removed in 3.0.0. Domain-specific aliases (revenue, invoice, timeline, beachhead, segment tags) belong in the consuming product, not in Konstrukt.",
+
+  "card":  { "$type": "color", "$value": "var(--surface)",    "$deprecated": "Use surface." },
+  "muted": { "$type": "color", "$value": "var(--text-muted)", "$deprecated": "Use text-muted." },
+
+  "done":    { "$type": "color", "$value": "var(--success)",    "$deprecated": "Use success." },
+  "done-bg": { "$type": "color", "$value": "var(--success-bg)", "$deprecated": "Use success-bg." },
+
+  "badge": {
+    "draft":    { "$type": "color", "$value": "var(--status-draft)",    "$deprecated": "Use status-draft." },
+    "review":   { "$type": "color", "$value": "var(--status-review)",   "$deprecated": "Use status-review." },
+    "complete": { "$type": "color", "$value": "var(--status-complete)", "$deprecated": "Use status-complete." }
+  },
+
+  "tag": {
+    "builders-bg":    { "$type": "color", "$value": "var(--category-1-bg)", "$deprecated": "Use category-1-bg." },
+    "builders":       { "$type": "color", "$value": "var(--category-1)",    "$deprecated": "Use category-1." },
+    "builders-text":  { "$type": "color", "$value": "var(--category-1)",    "$deprecated": "Use category-1." },
+    "operators-bg":   { "$type": "color", "$value": "var(--category-2-bg)", "$deprecated": "Use category-2-bg." },
+    "operators":      { "$type": "color", "$value": "var(--category-2)",    "$deprecated": "Use category-2." },
+    "operators-text": { "$type": "color", "$value": "var(--category-2)",    "$deprecated": "Use category-2." },
+    "learners-bg":    { "$type": "color", "$value": "var(--category-3-bg)", "$deprecated": "Use category-3-bg." },
+    "learners":       { "$type": "color", "$value": "var(--category-3)",    "$deprecated": "Use category-3." },
+    "learners-text":  { "$type": "color", "$value": "var(--category-3)",    "$deprecated": "Use category-3." }
+  },
+
+  "beachhead-bg": { "$type": "color", "$value": "var(--category-4-bg)", "$deprecated": "Use category-4-bg." },
+  "beachhead":    { "$type": "color", "$value": "var(--category-4)",    "$deprecated": "Use category-4." },
+
+  "revenue": {
+    "paid":         { "$type": "color", "$value": "var(--success)",    "$deprecated": "Define in the product; maps to success." },
+    "paid-bg":      { "$type": "color", "$value": "var(--success-bg)", "$deprecated": "Define in the product; maps to success-bg." },
+    "invoiced":     { "$type": "color", "$value": "var(--accent)",     "$deprecated": "Define in the product; maps to accent." },
+    "invoiced-bg":  { "$type": "color", "$value": "var(--accent-soft)","$deprecated": "Define in the product; maps to accent-soft." },
+    "estimated":    { "$type": "color", "$value": "var(--warning)",    "$deprecated": "Define in the product; maps to warning." },
+    "estimated-bg": { "$type": "color", "$value": "var(--warning-bg)", "$deprecated": "Define in the product; maps to warning-bg." }
+  },
+  "invoice": {
+    "paid":       { "$type": "color", "$value": "var(--success)",         "$deprecated": "Define in the product; maps to success." },
+    "paid-bg":    { "$type": "color", "$value": "var(--success-bg)",      "$deprecated": "Define in the product; maps to success-bg." },
+    "issued":     { "$type": "color", "$value": "var(--accent)",          "$deprecated": "Define in the product; maps to accent." },
+    "issued-bg":  { "$type": "color", "$value": "var(--accent-soft)",     "$deprecated": "Define in the product; maps to accent-soft." },
+    "overdue":    { "$type": "color", "$value": "var(--danger)",          "$deprecated": "Define in the product; maps to danger." },
+    "overdue-bg": { "$type": "color", "$value": "var(--danger-bg)",       "$deprecated": "Define in the product; maps to danger-bg." },
+    "draft":      { "$type": "color", "$value": "var(--status-draft)",    "$deprecated": "Define in the product; maps to status-draft." },
+    "draft-bg":   { "$type": "color", "$value": "var(--status-draft-bg)", "$deprecated": "Define in the product; maps to status-draft-bg." }
+  },
+  "timeline": {
+    "today":    { "$type": "color", "$value": "var(--danger)", "$deprecated": "Define in the product; maps to danger." },
+    "vacation": { "$type": "other", "$value": "color-mix(in srgb, var(--warning-bg) 35%, transparent)", "$deprecated": "Define in the product." }
+  }
+}

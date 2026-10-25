@@ -10,20 +10,37 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, cpSync } f
 import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import StyleDictionary from 'style-dictionary';
-import { cssBlocks, swiftThemes, palettes, fontImport } from './themes.mjs';
+import { cssBlocks, themes, semanticSources, palettes, legacyPalettes, fontImport } from './themes.mjs';
 import { projectRoot, mergeSources, flatten, resolveValue, unwrapDtcg, readJson } from './lib.mjs';
 
 const dist = resolve(projectRoot, 'dist');
 const distCss = join(dist, 'css');
 const distSwift = join(dist, 'swift', 'Konstrukt');
 
+/**
+ * A typography role becomes three properties: a `font` shorthand plus its
+ * tracking and case, which the shorthand cannot carry.
+ *   h1 { font: var(--type-display); letter-spacing: var(--type-display-tracking); }
+ */
+function typographyDecls(name, v) {
+  return [
+    [name, `${v.fontWeight} ${v.fontSize}/${v.lineHeight} ${v.fontFamily}`],
+    [`${name}-tracking`, v.letterSpacing],
+    [`${name}-transform`, v.textTransform],
+  ];
+}
+
 StyleDictionary.registerFormat({
   name: 'konstrukt/css',
   format: ({ dictionary, options }) => {
     const { selector, prelude } = options;
-    const lines = dictionary.allTokens.map(
-      (token) => `  --${token.path.join('-')}: ${token.$value ?? token.value};`
-    );
+    const lines = dictionary.allTokens.flatMap((token) => {
+      const name = token.path.join('-');
+      const value = token.$value ?? token.value;
+      const decls = token.$type === 'typography' ? typographyDecls(name, value) : [[name, value]];
+      const note = token.$deprecated ? ` /* deprecated: ${token.$deprecated} */` : '';
+      return decls.map(([n, v]) => `  --${n}: ${v};${note}`);
+    });
     if (prelude) lines.unshift(`  ${prelude}`);
     return `${selector} {\n${lines.join('\n')}\n}\n`;
   },
@@ -63,13 +80,12 @@ async function buildCss() {
     '',
     '/**',
     ' * Konstrukt Design System — generated tokens. DO NOT EDIT BY HAND.',
-    ' * Source: apps/konstrukt/tokens/*.json — run `npm run build`.',
+    ' * Source: tokens/*.json — run `npm run build`.',
     ' *',
     ' * Aesthetic: Bauhaus / Swiss International Typographic Style.',
-    ' * Two orthogonal axes on <html>:',
-    ' *   data-palette : atelier | courage | minimal | hl | blueprint',
-    ' *                  (legacy alias `sqdl` rendered the same as `hl`)',
-    ' *   data-mode    : light | dark   (legacy alias [data-theme="dark"])',
+    ' * One palette (atelier), two modes, set on <html>:',
+    ' *   data-mode : light | dark   (legacy alias [data-theme="dark"])',
+    ` *   data-palette is accepted but ignored; ${legacyPalettes.join(', ')} render as atelier.`,
     ' */',
     '',
   ].join('\n');
@@ -87,7 +103,10 @@ function resolvedMap(sources) {
   const tokens = flatten(mergeSources(sources));
   const lookup = Object.fromEntries(tokens.map((t) => [t.name, t.value]));
   const out = {};
-  for (const t of tokens) out[t.name] = { value: resolveValue(t.value, lookup), type: t.type };
+  for (const t of tokens) {
+    out[t.name] = { value: resolveValue(t.value, lookup), type: t.type };
+    if (t.deprecated) out[t.name].deprecated = t.deprecated;
+  }
   return out;
 }
 
@@ -97,18 +116,21 @@ function loadTextSpec() {
 
 function buildJsonManifest(textSpec) {
   const globals = resolvedMap(['tokens/global.json']);
-  const themes = {};
-  for (const { palette, mode, sources } of swiftThemes) {
-    themes[`${palette}.${mode}`] = resolvedMap(sources);
+  const resolved = {};
+  for (const { palette, mode, sources } of themes) {
+    resolved[`${palette}.${mode}`] = resolvedMap(sources);
   }
   const manifest = {
     name: 'konstrukt',
+    version: readJson('package.json').version,
     description: 'The Hooman Loop design system — resolved design tokens.',
     generated: new Date().toISOString().slice(0, 10),
     palettes,
+    legacyPalettes,
     modes: ['light', 'dark'],
+    primitives: resolvedMap(['tokens/primitives.json']),
     global: globals,
-    themes,
+    themes: resolved,
     text: textSpec,
   };
   mkdirSync(dist, { recursive: true });
@@ -153,12 +175,34 @@ function firstFontFamily(value) {
   return first.replace(/^["']|["']$/g, '');
 }
 
+function remToPoints(value) {
+  const n = parseFloat(value);
+  return String(value).endsWith('rem') ? n * 16 : n;
+}
+
+const SWIFT_WEIGHTS = { 400: 'regular', 500: 'medium', 600: 'semibold', 700: 'bold' };
+
 function buildSwift() {
   // Color fields = semantic color tokens (shared across every theme).
-  const semantic = flatten(mergeSources(['tokens/semantic.json']));
-  const colorNames = semantic.filter((t) => t.type === 'color').map((t) => t.name);
+  // Deprecated aliases become computed properties that forward to their target.
+  const semantic = flatten(mergeSources(semanticSources)).filter((t) => t.type === 'color');
+  const live = semantic.filter((t) => !t.deprecated);
+  const colorNames = live.map((t) => t.name);
+  const aliases = semantic
+    .filter((t) => t.deprecated)
+    .map((t) => {
+      const target = String(t.value).match(/^var\(--([a-z0-9-]+)\)$/)?.[1];
+      if (!target) return null;
+      // Follow alias chains (badge-review -> status-review) to a stored field.
+      const field = colorNames.includes(target)
+        ? target
+        : String(semantic.find((s) => s.name === target)?.value).match(/^var\(--([a-z0-9-]+)\)$/)?.[1];
+      if (!colorNames.includes(field)) return null;
+      return `    @available(*, deprecated, message: "${t.deprecated.replace(/"/g, '\\"')}")\n    var ${kebabToCamel(t.name)}: Color { ${kebabToCamel(field)} }`;
+    })
+    .filter(Boolean);
 
-  const themeConsts = swiftThemes.map(({ palette, mode, sources }) => {
+  const themeConsts = themes.map(({ palette, mode, sources }) => {
     const map = resolvedMap(sources);
     const args = colorNames
       .map((name) => `        ${kebabToCamel(name)}: Color(hex: "${map[name].value}")`)
@@ -166,7 +210,7 @@ function buildSwift() {
     return `    static let ${palette}${mode === 'dark' ? 'Dark' : 'Light'} = KonstruktTheme(\n${args}\n    )`;
   });
 
-  const switchCases = swiftThemes
+  const switchCases = themes
     .map(
       ({ palette, mode }) =>
         `        case (.${palette}, .${mode}): return ${palette}${mode === 'dark' ? 'Dark' : 'Light'}`
@@ -185,25 +229,52 @@ function buildSwift() {
     .filter(([n]) => n.startsWith('sp-'))
     .map(([n, v]) => `    public static let sp${n.slice(3)}: CGFloat = ${parseFloat(v.value)}`)
     .join('\n');
+  const strokes = Object.entries(globals)
+    .filter(([n]) => n.startsWith('stroke-'))
+    .map(([n, v]) => `    public static let ${n.slice(7)}: CGFloat = ${parseFloat(v.value)}`)
+    .join('\n');
   const fonts = [
     `    public static let display = "${firstFontFamily(globals['font-display'].value)}"`,
     `    public static let sans = "${firstFontFamily(globals['font-sans'].value)}"`,
     `    public static let mono = "${firstFontFamily(globals['font-mono'].value)}"`,
   ].join('\n');
-  const swatches = Object.entries(globals)
-    .filter(([n]) => n.startsWith('swatch-'))
-    .map(([n, v]) => `    public static let ${kebabToCamel(n.slice(8))} = Color(hex: "${v.value}")`)
+  const typeStyles = Object.entries(globals)
+    .filter(([, v]) => v.type === 'typography')
+    .map(([n, { value: v }]) => {
+      const name = kebabToCamel(n.slice(5));
+      return [
+        `    static let ${name} = KonstruktTextStyle(`,
+        `        family: "${firstFontFamily(v.fontFamily)}",`,
+        `        size: ${remToPoints(v.fontSize)},`,
+        `        weight: .${SWIFT_WEIGHTS[v.fontWeight]},`,
+        `        lineHeight: ${v.lineHeight},`,
+        `        tracking: ${parseFloat(v.letterSpacing)},`,
+        `        uppercase: ${v.textTransform === 'uppercase'}`,
+        `    )`,
+      ].join('\n');
+    })
+    .join('\n\n');
+  const legacyCases = legacyPalettes
+    .filter((p) => p !== 'sqdl')
+    .map(
+      (p) =>
+        `    @available(*, deprecated, message: "Removed in 2.0.0; renders as .atelier.")\n    static var ${p}: KonstruktPalette { .atelier }`
+    )
     .join('\n');
 
   const swift = `// Konstrukt Design System — generated Swift tokens. DO NOT EDIT BY HAND.
-// Source: apps/konstrukt/tokens/*.json — run \`npm run build\`.
+// Source: tokens/*.json — run \`npm run build\`.
 //
-// Bauhaus / Swiss International style. Two axes: palette x mode.
+// Bauhaus / Swiss International style. One palette, two modes.
 
 import SwiftUI
 
 public enum KonstruktPalette: String, CaseIterable, Sendable {
     case ${palettes.join(', ')}
+}
+
+public extension KonstruktPalette {
+${legacyCases}
 }
 
 public enum KonstruktMode: String, CaseIterable, Sendable {
@@ -216,6 +287,10 @@ ${fields}
     public init(${initArgs}) {
 ${initBody}
     }
+}
+
+public extension KonstruktTheme {
+${aliases.join('\n\n')}
 }
 
 public extension KonstruktTheme {
@@ -234,6 +309,11 @@ public enum KonstruktSpacing {
 ${spacing}
 }
 
+/// Border widths: hairline, the 2px ink rule, and the 4px accent rail.
+public enum KonstruktStroke {
+${strokes}
+}
+
 public enum KonstruktRadius {
     public static let base: CGFloat = ${parseFloat(globals['radius'].value)}
 }
@@ -243,9 +323,36 @@ public enum KonstruktFont {
 ${fonts}
 }
 
-/// Theme-switcher swatch colors (constant across modes).
-public enum KonstruktSwatch {
-${swatches}
+/// A typography role: family, size in points, weight, line height as a
+/// multiple of size, tracking in em, and case.
+public struct KonstruktTextStyle: Sendable, Equatable {
+    public let family: String
+    public let size: CGFloat
+    public let weight: Font.Weight
+    public let lineHeight: CGFloat
+    public let tracking: CGFloat
+    public let uppercase: Bool
+
+    public var font: Font { .custom(family, size: size).weight(weight) }
+    /// Tracking in points, for \`.tracking(_:)\`.
+    public var trackingPoints: CGFloat { tracking * size }
+    /// Extra leading in points, for \`.lineSpacing(_:)\`.
+    public var lineSpacing: CGFloat { max(0, (lineHeight - 1) * size) }
+}
+
+public extension KonstruktTextStyle {
+${typeStyles}
+}
+
+public extension View {
+    /// Apply a Konstrukt typography role: font, tracking, line spacing and case.
+    @available(iOS 16.0, macOS 13.0, *)
+    func konstruktTextStyle(_ style: KonstruktTextStyle) -> some View {
+        font(style.font)
+            .tracking(style.trackingPoints)
+            .lineSpacing(style.lineSpacing)
+            .textCase(style.uppercase ? .uppercase : nil)
+    }
 }
 
 // MARK: - SwiftUI environment
@@ -346,7 +453,7 @@ async function main() {
   console.log(`  dist/css/base.css        (portable components)`);
   console.log(`  dist/css/theme.js        (HLTheme runtime)`);
   console.log(`  dist/css/text.css        (text-layer embed)`);
-  console.log(`  dist/tokens.json         (${swiftThemes.length} resolved themes + text)`);
+  console.log(`  dist/tokens.json         (${themes.length} resolved themes + text)`);
   console.log(`  dist/text.json           (text-layer spec)`);
   console.log(`  dist/text.py             (text-layer renderer)`);
   console.log(`  dist/swift/Konstrukt/    (Swift package)`);
