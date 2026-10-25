@@ -1,83 +1,61 @@
 {
-  "bg":           { "$type": "color", "$value": "#F5F5F0" },
-  "bg-alt":       { "$type": "color", "$value": "#EBEBEB" },
-  "surface":      { "$type": "color", "$value": "#FFFFFF" },
-  "card":         { "$type": "color", "$value": "#FFFFFF" },
+  "$description": "Light-mode semantic roles (the :root defaults). Values reference primitives as {color.*} or other roles as var(--*). Dark mode overrides only what differs, in themes/dark.json.",
 
-  "text":         { "$type": "color", "$value": "#0A0A0A" },
-  "text-muted":   { "$type": "color", "$value": "#6A6A6A" },
-  "muted":        { "$type": "color", "$value": "#6A6A6A" },
-  "ink":          { "$type": "color", "$value": "#0A0A0A" },
+  "bg":           { "$type": "color", "$value": "{color.neutral.50}" },
+  "bg-alt":       { "$type": "color", "$value": "{color.neutral.100}" },
+  "surface":      { "$type": "color", "$value": "{color.neutral.0}" },
 
-  "border":       { "$type": "color", "$value": "#0A0A0A" },
-  "border-light": { "$type": "color", "$value": "#D0D0C8" },
+  "text":         { "$type": "color", "$value": "{color.neutral.1000}" },
+  "text-muted":   { "$type": "color", "$value": "{color.neutral.600}" },
+  "ink":          { "$type": "color", "$value": "{color.neutral.1000}", "$description": "Structural rules: 2px dividers, module top borders, table headers. Matches text in both modes today but is a separate role." },
 
-  "accent":       { "$type": "color", "$value": "#067F8A" },
-  "accent-soft":  { "$type": "color", "$value": "#C8EAED" },
-  "accent-light": { "$type": "color", "$value": "#E8F6F7" },
+  "border":       { "$type": "color", "$value": "{color.neutral.1000}", "$description": "Outlines of interactive controls. Must hold 3:1 against surface." },
+  "border-light": { "$type": "color", "$value": "{color.neutral.200}", "$description": "Decorative hairlines only; exempt from the contrast gate." },
 
-  "done":    { "$type": "color", "$value": "#166534" },
-  "done-bg": { "$type": "color", "$value": "#DCFCE7" },
+  "accent":       { "$type": "color", "$value": "{color.teal.700}" },
+  "accent-soft":  { "$type": "color", "$value": "{color.teal.100}" },
+  "accent-light": { "$type": "color", "$value": "{color.teal.50}" },
+  "on-accent":    { "$type": "color", "$value": "{color.neutral.0}", "$description": "Text and icons on a solid accent fill." },
+  "focus":        { "$type": "color", "$value": "{color.teal.700}", "$description": "Focus ring. Teal rather than ink so it never reads as one more structural rule." },
 
-  "badge": {
-    "draft":    { "$type": "color", "$value": "#7A7A7A" },
-    "review":   { "$type": "color", "$value": "#067F8A" },
-    "complete": { "$type": "color", "$value": "#166534" }
-  },
+  "success":      { "$type": "color", "$value": "{color.green.700}" },
+  "success-bg":   { "$type": "color", "$value": "{color.green.100}" },
+  "warning":      { "$type": "color", "$value": "{color.ochre.700}" },
+  "warning-bg":   { "$type": "color", "$value": "{color.ochre.100}" },
+  "danger":       { "$type": "color", "$value": "{color.red.700}" },
+  "danger-bg":    { "$type": "color", "$value": "{color.red.100}" },
+  "info":         { "$type": "color", "$value": "{color.blue.700}" },
+  "info-bg":      { "$type": "color", "$value": "{color.blue.100}" },
 
   "status": {
-    "draft-bg":        { "$type": "color", "$value": "#F0EDED" },
-    "draft":           { "$type": "color", "$value": "#7A7A7A" },
-    "review-bg":       { "$type": "color", "$value": "#C8EAED" },
-    "review":          { "$type": "color", "$value": "#067F8A" },
-    "complete-bg":     { "$type": "color", "$value": "#DCFCE7" },
-    "complete":        { "$type": "color", "$value": "#166534" },
-    "in-progress-bg":  { "$type": "color", "$value": "#FEF3C7" },
-    "in-progress":     { "$type": "color", "$value": "#B45309" },
-    "launched-bg":     { "$type": "color", "$value": "#DBEAFE" },
-    "launched":        { "$type": "color", "$value": "#1D4ED8" }
+    "draft":          { "$type": "color", "$value": "{color.neutral.650}" },
+    "draft-bg":       { "$type": "color", "$value": "{color.neutral.125}" },
+    "review":         { "$type": "color", "$value": "var(--accent)" },
+    "review-bg":      { "$type": "color", "$value": "var(--accent-soft)" },
+    "complete":       { "$type": "color", "$value": "var(--success)" },
+    "complete-bg":    { "$type": "color", "$value": "var(--success-bg)" },
+    "in-progress":    { "$type": "color", "$value": "var(--warning)" },
+    "in-progress-bg": { "$type": "color", "$value": "var(--warning-bg)" },
+    "launched":       { "$type": "color", "$value": "var(--info)" },
+    "launched-bg":    { "$type": "color", "$value": "var(--info-bg)" }
   },
 
-  "tag": {
-    "builders-bg":    { "$type": "color", "$value": "#DBEAFE" },
-    "builders":       { "$type": "color", "$value": "#1D4ED8" },
-    "builders-text":  { "$type": "color", "$value": "#1D4ED8" },
-    "operators-bg":   { "$type": "color", "$value": "#EDE9FE" },
-    "operators":      { "$type": "color", "$value": "#6D28D9" },
-    "operators-text": { "$type": "color", "$value": "#6D28D9" },
-    "learners-bg":    { "$type": "color", "$value": "#FEF9C3" },
-    "learners":       { "$type": "color", "$value": "#854D0E" },
-    "learners-text":  { "$type": "color", "$value": "#854D0E" }
+  "category": {
+    "$description": "Generic categorical slots for tags and segments. Products map their own names onto these numbers; the design system does not know what a category means.",
+    "1":    { "$type": "color", "$value": "{color.blue.700}" },
+    "1-bg": { "$type": "color", "$value": "{color.blue.100}" },
+    "2":    { "$type": "color", "$value": "{color.violet.700}" },
+    "2-bg": { "$type": "color", "$value": "{color.violet.100}" },
+    "3":    { "$type": "color", "$value": "{color.ochre.700}" },
+    "3-bg": { "$type": "color", "$value": "{color.ochre.100}" },
+    "4":    { "$type": "color", "$value": "{color.yellow.800}" },
+    "4-bg": { "$type": "color", "$value": "{color.yellow.200}" },
+    "5":    { "$type": "color", "$value": "{color.green.700}" },
+    "5-bg": { "$type": "color", "$value": "{color.green.100}" }
   },
 
-  "beachhead-bg": { "$type": "color", "$value": "#FEF08A" },
-  "beachhead":    { "$type": "color", "$value": "#713F12" },
+  "selection-bg": { "$type": "color", "$value": "{color.yellow.200}" },
+  "selection-fg": { "$type": "color", "$value": "{color.yellow.950}" },
 
-  "selection-bg": { "$type": "color", "$value": "#FEF08A" },
-  "selection-fg": { "$type": "color", "$value": "#422006" },
-
-  "shadow": { "$type": "other", "$value": "none" },
-
-  "revenue": {
-    "paid":          { "$type": "color", "$value": "var(--done)" },
-    "paid-bg":       { "$type": "color", "$value": "var(--done-bg)" },
-    "invoiced":      { "$type": "color", "$value": "var(--accent)" },
-    "invoiced-bg":   { "$type": "color", "$value": "var(--accent-soft)" },
-    "estimated":     { "$type": "color", "$value": "var(--status-in-progress)" },
-    "estimated-bg":  { "$type": "color", "$value": "var(--status-in-progress-bg)" }
-  },
-  "invoice": {
-    "paid":      { "$type": "color", "$value": "var(--done)" },
-    "paid-bg":   { "$type": "color", "$value": "var(--done-bg)" },
-    "issued":    { "$type": "color", "$value": "var(--accent)" },
-    "issued-bg": { "$type": "color", "$value": "var(--accent-soft)" },
-    "overdue":   { "$type": "color", "$value": "#DC2626" },
-    "overdue-bg":{ "$type": "color", "$value": "#FEE2E2" },
-    "draft":     { "$type": "color", "$value": "var(--status-draft)" },
-    "draft-bg":  { "$type": "color", "$value": "var(--status-draft-bg)" }
-  },
-  "timeline": {
-    "today":    { "$type": "color", "$value": "#DC2626" },
-    "vacation": { "$type": "other", "$value": "color-mix(in srgb, var(--status-in-progress-bg) 35%, transparent)" }
-  }
+  "shadow": { "$type": "other", "$value": "none" }
 }

@@ -1,9 +1,10 @@
 /**
  * The Hooman Loop — Theme engine (mode + palette).
  *
- * Two axes:
- *   mode    : "light" | "dark"
- *   palette : "atelier" | "courage" | "minimal" | "hl" | "blueprint"
+ * Mode is the only real axis: "light" | "dark".
+ * Palette is kept for API compatibility. Konstrukt 2.0 ships one palette,
+ * "atelier"; the 1.x names (hl, sqdl, courage, minimal, blueprint) are
+ * accepted and normalized to it, so stored preferences keep working.
  *
  * Applies data-mode and data-palette on <html>.
  * Optional: data-hl-lock-mode="light" forces light mode for this document only
@@ -16,7 +17,7 @@
  *   - Migrates ancient `sqdl-theme` key on first load.
  *   - Keeps `data-theme` attribute in sync with `data-mode`.
  *   - Falls back to reading `data-sqdl-lock-mode` if the new attribute is absent.
- *   - Accepts palette name `sqdl` as an alias for `hl`.
+ *   - Accepts any 1.x palette name and renders it as `atelier`.
  *   - Exposes `window.SQDLTheme` as an alias for `window.HLTheme` so legacy
  *     inline scripts keep working.
  */
@@ -48,12 +49,13 @@
   var MODE_KEY = 'hl-mode';
   var PALETTE_KEY = 'hl-palette';
   var LEGACY_THEME_KEY = 'hl-theme';
-  var PALETTES = ['atelier', 'courage', 'minimal', 'hl', 'blueprint'];
+  var PALETTES = ['atelier'];
+  var LEGACY_PALETTES = ['hl', 'sqdl', 'courage', 'minimal', 'blueprint'];
   var DEFAULT_PALETTE = 'atelier';
 
-  /* Backwards-compat: accept old palette name `sqdl` as `hl`. */
+  /* Backwards-compat: every 1.x palette name renders as atelier. */
   function normalizePalette(name) {
-    if (name === 'sqdl') return 'hl';
+    if (LEGACY_PALETTES.indexOf(name) !== -1) return DEFAULT_PALETTE;
     return name;
   }
 

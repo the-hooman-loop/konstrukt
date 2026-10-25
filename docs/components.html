@@ -16,7 +16,7 @@
     <header class="page-header">
       <p class="micro-label">Reference</p>
       <h1>Components</h1>
-      <p class="tagline">Portable building blocks from <code class="inline">base.css</code>. They use only tokens, so they re-theme automatically with the palette and mode controls above.</p>
+      <p class="tagline">Portable building blocks from <code class="inline">base.css</code>. They use only tokens, so they re-theme automatically with the mode control above.</p>
     </header>
 
     <h2 class="section-label"><span class="micro-label">Module</span></h2>
@@ -37,22 +37,61 @@
       <pre class="code">&lt;span class="badge badge-review"&gt;Review&lt;/span&gt;</pre>
     </section>
 
-    <h2 class="section-label"><span class="micro-label">Segment tags</span></h2>
+    <h2 class="section-label"><span class="micro-label">Category tags</span></h2>
     <section class="module">
       <div class="demo">
-        <span class="tag tag-builders">Builders</span>
-        <span class="tag tag-operators">Operators</span>
-        <span class="tag tag-learners">Learners</span>
-        <span class="beachhead">Beachhead</span>
+        <span class="tag tag-1">Category 1</span>
+        <span class="tag tag-2">Category 2</span>
+        <span class="tag tag-3">Category 3</span>
+        <span class="tag tag-4">Category 4</span>
+        <span class="tag tag-5">Category 5</span>
       </div>
+      <p class="meta">Konstrukt ships numbered slots, not product vocabulary. A product maps its own segments onto them.</p>
+      <pre class="code">/* in the product, not in Konstrukt */
+.tag-builders { background: var(--category-1-bg); color: var(--category-1); }</pre>
     </section>
 
     <h2 class="section-label"><span class="micro-label">Buttons</span></h2>
     <section class="module">
       <div class="demo">
+        <button class="btn-primary">Primary action</button>
         <button class="portal-quiet-btn">Quiet button</button>
         <button class="portal-quiet-btn is-selected">Selected</button>
+        <button class="portal-quiet-btn" disabled>Disabled</button>
       </div>
+      <p class="meta">One <code class="inline">.btn-primary</code> per surface. Everything else is quiet.</p>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Form fields</span></h2>
+    <section class="module">
+      <div class="field">
+        <label for="demo-name">Project name</label>
+        <input class="input" id="demo-name" placeholder="Konstrukt">
+        <span class="field-hint">Shown on the portal index.</span>
+      </div>
+      <div class="field">
+        <label for="demo-email">Billing email</label>
+        <input class="input" id="demo-email" value="not-an-email" aria-invalid="true" aria-describedby="demo-email-error">
+        <span class="field-error" id="demo-email-error">Enter a valid email address.</span>
+      </div>
+      <pre class="code">&lt;div class="field"&gt;
+  &lt;label for="name"&gt;Project name&lt;/label&gt;
+  &lt;input class="input" id="name"&gt;
+&lt;/div&gt;</pre>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Alerts</span></h2>
+    <section class="module">
+      <div class="alert alert-success" role="status"><strong>Saved.</strong> Tokens rebuilt and synced to 3 surfaces.</div>
+      <div class="alert alert-info" role="status"><strong>Note.</strong> The portal still reads deprecated aliases.</div>
+      <div class="alert alert-warning" role="status"><strong>Heads up.</strong> Two consumers are pinned to 1.x.</div>
+      <div class="alert alert-danger" role="alert"><strong>Build failed.</strong> Contrast check found 2 pairs below AA.</div>
+      <pre class="code">&lt;div class="alert alert-danger" role="alert"&gt;…&lt;/div&gt;</pre>
+    </section>
+
+    <h2 class="section-label"><span class="micro-label">Focus</span></h2>
+    <section class="module">
+      <p>Every focusable element gets a 2px <code class="inline">--focus</code> ring on <code class="inline">:focus-visible</code>. It is teal, not ink, so it never reads as one more structural rule. Tab through this page to see it.</p>
     </section>
 
     <h2 class="section-label"><span class="micro-label">Data table</span></h2>

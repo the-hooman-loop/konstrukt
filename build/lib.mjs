@@ -13,11 +13,48 @@ function isToken(node) {
   return node && typeof node === 'object' && '$value' in node;
 }
 
-/** Deep-merge token objects in cascade order (later wins). */
+/** Primitive ramps: referenced as {color.*}, never emitted themselves. */
+export const PRIMITIVES = 'tokens/primitives.json';
+
+/**
+ * Deep-merge token objects in cascade order (later wins), then resolve
+ * build-time references. `{a.b.c}` is replaced with the literal value of that
+ * token path, looked up in the primitives plus the merged sources. `var(--x)`
+ * references are left alone: they are runtime links between emitted tokens.
+ */
 export function mergeSources(sources) {
   const out = {};
   for (const src of sources) deepMerge(out, readJson(src));
-  return out;
+  const pool = {};
+  deepMerge(pool, readJson(PRIMITIVES));
+  deepMerge(pool, out);
+  return resolveRefs(out, pool);
+}
+
+function lookupPath(pool, path, seen = new Set()) {
+  if (seen.has(path)) throw new Error(`Circular token reference: {${path}}`);
+  seen.add(path);
+  let node = pool;
+  for (const key of path.split('.')) node = node?.[key];
+  if (!isToken(node)) throw new Error(`Unresolved token reference: {${path}}`);
+  const value = node.$value;
+  const whole = typeof value === 'string' && value.match(/^\{([^}]+)\}$/);
+  return whole ? lookupPath(pool, whole[1], seen) : value;
+}
+
+function resolveRefs(node, pool) {
+  if (typeof node === 'string') {
+    const whole = node.match(/^\{([^}]+)\}$/);
+    if (whole) return lookupPath(pool, whole[1]);
+    return node.replace(/\{([a-z0-9.-]+)\}/gi, (_, path) => String(lookupPath(pool, path)));
+  }
+  if (Array.isArray(node)) return node.map((n) => resolveRefs(n, pool));
+  if (node && typeof node === 'object') {
+    const out = {};
+    for (const [key, value] of Object.entries(node)) out[key] = resolveRefs(value, pool);
+    return out;
+  }
+  return node;
 }
 
 function deepMerge(target, source) {
@@ -35,7 +72,7 @@ function deepMerge(target, source) {
 
 /**
  * Flatten a nested token object to an ordered list of
- * { name, value, type } where `name` is the CSS custom-property name
+ * { name, value, type, deprecated? } where `name` is the CSS custom-property name
  * (path joined with "-", without the leading "--").
  */
 export function flatten(tokenObj) {
@@ -46,7 +83,9 @@ export function flatten(tokenObj) {
 
 function walk(node, path, out) {
   if (isToken(node)) {
-    out.push({ name: path.join('-'), value: node.$value, type: node.$type || 'other' });
+    const token = { name: path.join('-'), value: node.$value, type: node.$type || 'other' };
+    if (node.$deprecated) token.deprecated = node.$deprecated;
+    out.push(token);
     return;
   }
   for (const [key, value] of Object.entries(node)) {
@@ -56,6 +95,11 @@ function walk(node, path, out) {
 
 /** Resolve var(--x) references against a flat name->value map (for Swift/JSON). */
 export function resolveValue(value, lookup, seen = new Set()) {
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) out[k] = resolveValue(v, lookup, new Set(seen));
+    return out;
+  }
   if (typeof value !== 'string') return value;
   const match = value.match(/^var\(--([a-z0-9-]+)\)$/i);
   if (!match) return value;

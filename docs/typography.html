@@ -31,37 +31,38 @@
       </table>
     </section>
 
+    <h2 class="section-label"><span class="micro-label">Roles</span></h2>
+    <section class="module">
+      <p class="meta">Each role is a <code class="inline">--type-&lt;role&gt;</code> font shorthand plus <code class="inline">-tracking</code> and <code class="inline">-transform</code>. Rendered live from the manifest; Swift gets the same roles as <code class="inline">KonstruktTextStyle</code>.</p>
+      <div id="type-roles"></div>
+      <pre class="code">h1 {
+  font: var(--type-display);
+  letter-spacing: var(--type-display-tracking);
+  text-transform: var(--type-display-transform);
+}</pre>
+    </section>
+
     <h2 class="section-label"><span class="micro-label">Scale</span></h2>
     <section class="module">
-      <div class="specimen">
-        <h1>Display heading</h1>
-        <p class="spec-meta">h1 · Space Grotesk 700 · 3.5rem · letter-spacing -0.03em</p>
-      </div>
-      <div class="specimen">
-        <h2>Section heading</h2>
-        <p class="spec-meta">h2 · Space Grotesk 700 · 1.5rem · letter-spacing -0.02em</p>
-      </div>
-      <div class="specimen">
-        <h3>Subsection heading</h3>
-        <p class="spec-meta">h3 · Space Grotesk 600 · 1rem · uppercase · letter-spacing 0.04em</p>
-      </div>
-      <div class="specimen">
-        <p class="micro-label">Micro label</p>
-        <p class="spec-meta">.micro-label · Space Grotesk 700 · 0.6875rem · uppercase · letter-spacing 0.08em</p>
-      </div>
-      <div class="specimen">
-        <p>Body copy uses Inter at a comfortable 1.65 line height. It is built to carry long-form strategy notes, tables, and documentation without strain. The measure is capped so lines stay readable.</p>
-        <p class="spec-meta">body · Inter 400 · line-height 1.65</p>
-      </div>
-      <div class="specimen">
-        <p class="mono">const accent = "#067F8A";</p>
-        <p class="spec-meta">.mono · SF Mono · 0.8125rem</p>
-      </div>
+      <table class="data-table">
+        <thead><tr><th>Group</th><th>Tokens</th></tr></thead>
+        <tbody>
+          <tr><td>Size</td><td><code class="inline">--type-size-{10,11,12,13,14,15,16,18,24,36,56}</code> <span class="meta">named by pixel size, authored in rem</span></td></tr>
+          <tr><td>Weight</td><td><code class="inline">--type-weight-{regular,medium,semibold,bold}</code></td></tr>
+          <tr><td>Tracking</td><td><code class="inline">--type-tracking-{display,heading,tight,caps,badge,label}</code></td></tr>
+          <tr><td>Leading</td><td><code class="inline">--type-leading-{display,heading,title,snug,compact,body}</code></td></tr>
+        </tbody>
+      </table>
     </section>
 
     <footer class="site-footer">
       <p>Konstrukt · Typography</p>
     </footer>
   </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      window.KonstruktDocs.renderTypeRoles('type-roles');
+    });
+  </script>
 </body>
 </html>

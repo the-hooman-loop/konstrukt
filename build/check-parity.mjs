@@ -1,17 +1,21 @@
 /**
- * Parity gate — confirm the generated CSS matches the canonical portal
- * tokens.css value-for-value (selector by selector, declaration by
+ * Parity gate — confirm the generated CSS matches the committed snapshot of
+ * the token contract value-for-value (selector by selector, declaration by
  * declaration). Whitespace and declaration order are ignored; values are
  * compared exactly. Exits non-zero on any drift.
+ *
+ * The snapshot is the reviewed output of the previous release. A failure is
+ * either a generator regression or an intended token change; for the latter,
+ * run `npm run snapshot` and commit the snapshot diff with the token change so
+ * the reviewer sees exactly which custom properties moved.
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { projectRoot } from './lib.mjs';
 
 const generated = resolve(projectRoot, 'dist/css/konstrukt.css');
-// Default oracle is the committed snapshot of the original hand-authored
-// portal tokens.css (captured before the portal began consuming generated
-// output). Pass an explicit path to diff against any other stylesheet.
+// Default oracle is the committed snapshot (`npm run snapshot`). Pass an
+// explicit path to diff against any other stylesheet, such as a consumer's copy.
 const canonical = process.argv[2] || resolve(projectRoot, 'build/canonical-tokens.css');
 
 function parse(css) {
@@ -68,6 +72,7 @@ for (const selector of gen.keys()) {
 if (problems.length) {
   console.error(`Parity check FAILED (${problems.length} differences):`);
   for (const p of problems) console.error(`  - ${p}`);
+  console.error('If the change is intended, run `npm run snapshot` and commit the snapshot.');
   process.exit(1);
 }
 console.log(`Parity check passed — generated CSS matches ${canonical} value-for-value.`);

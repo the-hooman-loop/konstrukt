@@ -13,26 +13,31 @@ iOS, and character-cell channels — follows.
 
 ![Konstrukt landing page](assets/readme/hero.png)
 
-Ten themes · 78 resolved tokens per theme · 4 output targets · 0px radius ·
-0 shadows. Bauhaus / Swiss International: flat surfaces, square corners,
-authority through typography rather than chrome.
+One palette · light + dark · 43 color roles · 8 type roles · 4 output
+targets · WCAG AA gated · 0px radius · 0 shadows. Bauhaus / Swiss
+International: flat surfaces, square corners, authority through typography
+rather than chrome.
 
-## Ten themes, one token set
+## One palette, two modes
 
-![Palette cycling through all ten themes](assets/readme/palettes.gif)
+Konstrukt ships a single palette, **atelier**: warm off-white, near-black ink,
+one teal accent. `data-mode="light" | "dark"` on `<html>` switches between two
+flat token sets resolved at build time. No runtime theme math in the browser.
 
-Every theme is the intersection of two orthogonal axes, set as attributes on
-`<html>`: a **palette** (`atelier` · `courage` · `minimal` · `hl` · `blueprint`)
-and a **mode** (`light` · `dark`). Five palettes × two modes, resolved at build
-time into ten flat token sets. No runtime interpolation, no theme math in the
-browser.
+Tokens are layered: raw color ramps in `tokens/primitives.json` are referenced
+as `{color.teal.700}` and resolved at build time, never emitted. Semantic roles
+(`accent`, `danger`, `status-review`, `category-3`) are what consumers use, and
+dark mode overrides only the roles that differ.
+
+![The components page in light and dark mode, side by side](assets/readme/modes.png)
 
 ## Quick start
 
 ```bash
 npm install
 npm run build      # tokens/ -> dist/ (CSS, Swift, tokens.json, text) + docs/assets
-npm run check      # parity gate vs the canonical snapshot
+npm run check      # parity vs the committed snapshot + WCAG AA contrast
+npm run snapshot   # accept an intended token change
 npm run check:text # text-layer linter + golden board
 npm run docs       # serve the docs site on http://localhost:4340
 ```
@@ -41,9 +46,9 @@ npm run docs       # serve the docs site on http://localhost:4340
 
 | Output | Path | For |
 |--------|------|-----|
-| Themed CSS | `dist/css/konstrukt.css` | all web surfaces (palette × mode) |
+| Themed CSS | `dist/css/konstrukt.css` | all web surfaces (light + dark) |
 | Components | `dist/css/base.css` | portable Konstrukt components |
-| Theme runtime | `dist/css/theme.js` | `HLTheme` — sets mode/palette on `<html>` |
+| Theme runtime | `dist/css/theme.js` | `HLTheme` — sets the mode on `<html>` |
 | Text embed | `dist/css/text.css` | `pre.kt` styling for character-cell blocks |
 | Swift package | `dist/swift/Konstrukt/` | iOS / SwiftUI |
 | Manifest | `dist/tokens.json` | tooling, design apps, AI agents (includes `text`) |
@@ -57,15 +62,40 @@ Every token is authored once, in W3C DTCG JSON, and its path becomes its CSS
 custom property: `status.draft-bg` → `--status-draft-bg`. The reference page
 reads the generated manifest, so what you see is what ships.
 
-<img src="assets/readme/tokens.png" width="820" alt="Token reference: surfaces and text, accent and borders, status">
+<img src="assets/readme/tokens.png" width="820" alt="Token reference: surfaces and text, accent and borders, feedback, status, categories">
+
+Typography is tokenized too. Each role (`display`, `heading`, `subheading`,
+`label`, `badge`, `body`, `meta`, `mono`) is emitted as a `font` shorthand
+plus tracking and case, and the Swift package gets the same roles as
+`KonstruktTextStyle`:
+
+```css
+h1 {
+  font: var(--type-display);
+  letter-spacing: var(--type-display-tracking);
+}
+```
+
+Border widths are tokens as well: `--stroke-hairline` (1px), `--stroke-rule`
+(the 2px ink rule) and `--stroke-rail` (the 4px accent rail).
+
+<img src="assets/readme/typography.png" width="820" alt="Typography reference: font families, eight type roles rendered live, and the type scale">
+
+## Contrast
+
+Every foreground/background pair the components render is checked against
+WCAG 2.2 AA in both modes: 4.5:1 for text, 3:1 for control outlines, focus
+rings and structural rules. `npm run check` fails the build when a pair drops
+below. 80 pairs pass today.
 
 ## Components
 
 The portable component vocabulary: modules with 2px ink borders, status pills,
-segmented filters, data tables, question lists. Square by default, no shadows,
-teal reserved for the one primary action on a surface.
+category tags, primary and quiet buttons, form fields, alerts, data tables,
+question lists. Square by default, no shadows, teal reserved for the one
+primary action on a surface.
 
-<img src="assets/readme/components.png" width="820" alt="Component reference">
+<img src="assets/readme/components.png" width="820" alt="Component reference: modules, badges, category tags, buttons, form fields, alerts, data table, cards, progress">
 
 ## Text layer
 
@@ -115,7 +145,7 @@ example data; the phones are mockups, not device captures.
 - Text layer reference: [`docs/text.html`](docs/text.html). Spec:
   [`docs/text.md`](docs/text.md). Review sheet:
   [`docs/text-review.html`](docs/text-review.html).
-- The full contract — token model, build, parity gate, consumption, and
+- The full contract — token model, build, gates, consumption, and
   adoption status — is in [`DESIGN.md`](DESIGN.md).
 - iOS integration: `docs/ios.html`.
 - Deploying the docs: [`scripts/README-deploy.md`](scripts/README-deploy.md).
@@ -125,7 +155,9 @@ example data; the phones are mockups, not device captures.
 Author tokens in `tokens/` as W3C DTCG JSON. A token's path becomes its CSS
 custom property (`status.draft-bg` → `--status-draft-bg`). Never edit anything
 in `dist/` — it is generated. After editing, run
-`npm run build && npm run check && npm run check:text`.
+`npm run build && npm run check && npm run check:text`. If the parity gate
+fails because you meant to change a value, run `npm run snapshot` and commit
+the snapshot diff alongside the token change.
 
 ## Proposals
 
